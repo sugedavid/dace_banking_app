@@ -1,17 +1,27 @@
 // register user
-import 'package:banking_app/shared/toast_notification.dart';
+import 'package:banking_app/firebase_utils/user_utils.dart';
+import 'package:banking_app/shared/ba_toast_notification.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 // register a new user
 Future<void> registerUser(
-    String emailAddress, String password, BuildContext context) async {
+    String firstName,
+    String lastName,
+    String emailAddress,
+    String password,
+    String businessType,
+    BuildContext context) async {
   try {
     final credential =
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
       email: emailAddress,
       password: password,
     );
+
+    if (context.mounted) {
+      updateUser(credential, firstName, lastName, businessType, context);
+    }
   } on FirebaseAuthException catch (e) {
     if (e.code == 'weak-password') {
       showToast('The password provided is too weak.', context);
@@ -33,6 +43,9 @@ Future<void> logInUser(
       password: password,
     );
     print(credential.toString());
+    if (context.mounted) {
+      showToast('Logged in sucessfully.', context);
+    }
   } on FirebaseAuthException catch (e) {
     if (e.code == 'user-not-found') {
       showToast('No user found for that email.', context);

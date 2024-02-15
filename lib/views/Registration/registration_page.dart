@@ -1,6 +1,7 @@
-import 'package:banking_app/shared/dropdown_button.dart';
+import 'package:banking_app/firebase_utils/authentication_utils.dart';
+import 'package:banking_app/shared/ba_dropdown_button.dart';
 import 'package:banking_app/shared/onboarding_scaffold.dart';
-import 'package:banking_app/views/Login/login_page.dart';
+import 'package:banking_app/shared/ba_text_field.dart';
 import 'package:flutter/material.dart';
 
 class ResgistrationPage extends StatelessWidget {
@@ -8,66 +9,90 @@ class ResgistrationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final formKey = GlobalKey<FormState>();
+    final firstNameController = TextEditingController();
+    final lastNameController = TextEditingController();
+    final emailController = TextEditingController();
+    final passwordController = TextEditingController();
+    final accountTypeController = TextEditingController();
+
     return OnBoardingScaffold(
-      title: 'Register',
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // email
-          const TextField(
-            keyboardType: TextInputType.emailAddress,
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'Email',
-            ),
-          ),
+        title: 'Register',
+        body: Form(
+          key: formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // first name
+              BaTextField(
+                labelText: 'First Name',
+                textEditingController: firstNameController,
+                textInputType: TextInputType.name,
+              ),
 
-          const SizedBox(
-            height: 20,
-          ),
+              // last name
+              BaTextField(
+                labelText: 'Last Name',
+                textEditingController: lastNameController,
+                textInputType: TextInputType.name,
+              ),
 
-          // password
-          const TextField(
-            obscureText: true,
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'Password',
-            ),
-          ),
+              // email
+              BaTextField(
+                labelText: 'Email',
+                textEditingController: emailController,
+                textInputType: TextInputType.emailAddress,
+              ),
 
-          const SizedBox(
-            height: 20,
-          ),
+              // password
+              BaTextField(
+                labelText: 'Password',
+                textEditingController: passwordController,
+                obscureText: true,
+              ),
 
-          const BaDropdownButton(
-            list: ['Personal', 'Business'],
-          ),
+              // account type
+              BaDropdownButton(
+                labelText: 'What type of account would you like to create?',
+                list: const ['Personal', 'Business'],
+                textEditingController: accountTypeController,
+              ),
 
-          const SizedBox(
-            height: 40,
-          ),
+              const SizedBox(
+                height: 40,
+              ),
 
-          // cta
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.purple,
-              foregroundColor: Colors.white,
-            ),
-            onPressed: () {},
-            child: const Padding(
-              padding: EdgeInsets.all(20.0),
-              child: Text('Continue'),
-            ),
-          )
-        ],
-      ),
-      richActionText: "Already have an account? ",
-      richText: 'Login',
-      onRichCallTap: () => Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => const LogInPage(),
+              // continue cta
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.purple,
+                  foregroundColor: Colors.white,
+                ),
+                onPressed: () {
+                  if (formKey.currentState!.validate()) {
+                    registerUser(
+                      firstNameController.text,
+                      lastNameController.text,
+                      emailController.text,
+                      passwordController.text,
+                      accountTypeController.text,
+                      context,
+                    );
+                  }
+                },
+                child: const Padding(
+                  padding: EdgeInsets.all(20.0),
+                  child: Text(
+                    'Continue',
+                    style: TextStyle(fontWeight: FontWeight.w700),
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
-      ),
-    );
+        richActionText: "Already have an account? ",
+        richText: 'Login',
+        onRichCallTap: () => Navigator.of(context).pop());
   }
 }

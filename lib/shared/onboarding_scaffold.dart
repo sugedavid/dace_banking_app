@@ -20,7 +20,7 @@ class OnBoardingScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TextStyle defaultStyle =
-        const TextStyle(color: Colors.grey, fontSize: 20.0);
+        const TextStyle(color: Colors.grey, fontSize: 16.0);
     TextStyle linkStyle =
         const TextStyle(color: Colors.purple, fontWeight: FontWeight.w500);
 
