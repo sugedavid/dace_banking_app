@@ -1,11 +1,12 @@
 import 'dart:math';
 
-import 'package:banking_app/views/Login/login_page.dart';
+import 'package:banking_app/models/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../shared/ba_toast_notification.dart';
+import '../shared/main_scaffold.dart';
 
 final db = FirebaseFirestore.instance;
 
@@ -17,6 +18,7 @@ Future<void> updateUser(UserCredential credential, String firstName,
     'firstName': firstName,
     'lastName': lastName,
     'email': credential.user?.email,
+    'accountType': accountType,
   };
   // reference to the Firestore collection for user accounts
   CollectionReference usersCollection = db.collection('users');
@@ -32,17 +34,14 @@ Future<void> updateUser(UserCredential credential, String firstName,
       // add other fields as needed
     }).then((value) {
       showToast('Account created sucessfully!', context);
-      // TODO: Navigate to Home page
       MaterialPageRoute(
-        builder: (context) => const LogInPage(),
+        builder: (context) => const MainScaffold(),
       );
     }).catchError((error) {
       showToast('Oops! Something went wrong: $error', context);
-      print(error);
     });
   }).catchError((error) {
     showToast('Oops! Something went wrong: $error', context);
-    print(error);
   });
 }
 
@@ -65,5 +64,87 @@ Future<String> generateUniqueAccountNumber() async {
       // If the account number does not exist in the database, it's unique and we can use it
       return accountNumber;
     }
+  }
+}
+
+// authenticated user
+User? authUser() {
+  return FirebaseAuth.instance.currentUser;
+}
+
+// user information
+Future<UserModel> authUserInfo(BuildContext context) async {
+  if (FirebaseAuth.instance.currentUser != null) {
+    var user = authUser();
+    try {
+      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user?.uid)
+          .withConverter(
+            fromFirestore: UserModel.fromFirestore,
+            toFirestore: (UserModel user, _) => user.toFirestore(),
+          )
+          .get();
+
+      if (documentSnapshot.exists) {
+        // User document found
+        UserModel data = documentSnapshot.data() as UserModel;
+        return data;
+      } else {
+        // user document does not exist
+        return UserModel(
+          firstName: '',
+          lastName: '',
+          email: '',
+          accountType: '',
+        );
+      }
+    } catch (error) {
+      // error fetching user information
+      showToast('Error getting your information: $error', context);
+      return UserModel(
+        firstName: '',
+        lastName: '',
+        email: '',
+        accountType: '',
+      );
+    }
+  } else {
+    // user is not authenticated
+    showToast('You are not authenticated', context);
+    return UserModel(
+      firstName: '',
+      lastName: '',
+      email: '',
+      accountType: '',
+    );
+  }
+}
+
+// update user information
+Future<void> updateUserInfo(String firstName, String lastName,
+    String accountType, BuildContext context) async {
+  if (FirebaseAuth.instance.currentUser != null) {
+    var user = authUser();
+    try {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user?.uid)
+          .update({
+        'firstName': firstName,
+        'lastName': lastName,
+        'accountType': accountType,
+      }).then((value) {
+        showToast('Profile updated sucessfully!', context);
+      }).catchError((error) {
+        showToast('Oops! Something went wrong: $error', context);
+      });
+    } catch (error) {
+      // error updating user information
+      showToast('Error updating your information: $error', context);
+    }
+  } else {
+    // user is not authenticated
+    showToast('You are not authenticated', context);
   }
 }

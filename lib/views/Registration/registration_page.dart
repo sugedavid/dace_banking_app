@@ -28,28 +28,28 @@ class ResgistrationPage extends StatelessWidget {
               // first name
               BATextField(
                 labelText: 'First Name',
-                textEditingController: firstNameController,
+                controller: firstNameController,
                 textInputType: TextInputType.name,
               ),
 
               // last name
               BATextField(
                 labelText: 'Last Name',
-                textEditingController: lastNameController,
+                controller: lastNameController,
                 textInputType: TextInputType.name,
               ),
 
               // email
               BATextField(
                 labelText: 'Email',
-                textEditingController: emailController,
+                controller: emailController,
                 textInputType: TextInputType.emailAddress,
               ),
 
               // password
               BATextField(
                 labelText: 'Password',
-                textEditingController: passwordController,
+                controller: passwordController,
                 textInputType: TextInputType.visiblePassword,
                 obscureText: true,
               ),
@@ -58,7 +58,7 @@ class ResgistrationPage extends StatelessWidget {
               BADropdownButton(
                 labelText: 'What type of account would you like to create?',
                 list: const ['Personal', 'Business'],
-                textEditingController: accountTypeController,
+                controller: accountTypeController,
               ),
 
               const SizedBox(
@@ -70,7 +70,7 @@ class ResgistrationPage extends StatelessWidget {
                 text: 'Continue',
                 onPressed: () async {
                   if (formKey.currentState!.validate()) {
-                    registerUser(
+                    await registerUser(
                       firstNameController.text,
                       lastNameController.text,
                       emailController.text,

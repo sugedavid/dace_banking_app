@@ -22,61 +22,64 @@ class OnBoardingScaffold extends StatelessWidget {
     TextStyle defaultStyle =
         const TextStyle(color: Colors.grey, fontSize: 16.0);
     TextStyle linkStyle =
-        const TextStyle(color: Colors.purple, fontWeight: FontWeight.w500);
+        TextStyle(color: Colors.amber[800], fontWeight: FontWeight.w500);
 
-    return Scaffold(
-      appBar: null,
-      body: Center(
-          child: Padding(
-        padding: const EdgeInsets.all(18.0),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // title
-              Text(
-                title,
-                style:
-                    const TextStyle(fontWeight: FontWeight.w500, fontSize: 24),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-
-              // body
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(24.0),
-                  child: body,
+    return SafeArea(
+      child: Scaffold(
+        appBar: null,
+        body: Center(
+            child: Padding(
+          padding: const EdgeInsets.all(18.0),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // title
+                Text(
+                  title,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w500, fontSize: 24),
                 ),
-              ),
-
-              const SizedBox(
-                height: 30,
-              ),
-
-              // rich text link
-              RichText(
-                text: TextSpan(
-                  text: richActionText,
-                  style: defaultStyle,
-                  children: <TextSpan>[
-                    TextSpan(
-                      text: richText,
-                      style: linkStyle,
-                      recognizer: TapGestureRecognizer()..onTap = onRichCallTap,
-                    ),
-                  ],
+                const SizedBox(
+                  height: 20,
                 ),
-              ),
 
-              const SizedBox(
-                height: 20,
-              ),
-            ],
+                // body
+                Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: body,
+                  ),
+                ),
+
+                const SizedBox(
+                  height: 30,
+                ),
+
+                // rich text link
+                RichText(
+                  text: TextSpan(
+                    text: richActionText,
+                    style: defaultStyle,
+                    children: <TextSpan>[
+                      TextSpan(
+                        text: richText,
+                        style: linkStyle,
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = onRichCallTap,
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(
+                  height: 20,
+                ),
+              ],
+            ),
           ),
-        ),
-      )),
+        )),
+      ),
     );
   }
 }
