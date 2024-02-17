@@ -1,3 +1,4 @@
+import 'package:banking_app/shared/ba_primary_button.dart';
 import 'package:banking_app/shared/onboarding_scaffold.dart';
 import 'package:banking_app/firebase_utils/authentication_utils.dart';
 import 'package:flutter/material.dart';
@@ -22,14 +23,14 @@ class LogInPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             // email
-            BaTextField(
+            BATextField(
               labelText: 'Email',
               textEditingController: emailController,
               textInputType: TextInputType.emailAddress,
             ),
 
             // password
-            BaTextField(
+            BATextField(
               labelText: 'Password',
               textEditingController: passwordController,
               obscureText: true,
@@ -41,25 +42,15 @@ class LogInPage extends StatelessWidget {
             ),
 
             // continue cta
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.purple,
-                foregroundColor: Colors.white,
-              ),
-              onPressed: () {
+            BAPrimaryButton(
+              text: 'Continue',
+              onPressed: () async {
                 if (formKey.currentState!.validate()) {
                   logInUser(
                       emailController.text, passwordController.text, context);
                 }
               },
-              child: const Padding(
-                padding: EdgeInsets.all(20.0),
-                child: Text(
-                  'Continue',
-                  style: TextStyle(fontWeight: FontWeight.w700),
-                ),
-              ),
-            )
+            ),
           ],
         ),
       ),

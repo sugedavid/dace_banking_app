@@ -4,6 +4,8 @@ import 'package:banking_app/shared/onboarding_scaffold.dart';
 import 'package:banking_app/shared/ba_text_field.dart';
 import 'package:flutter/material.dart';
 
+import '../../shared/ba_primary_button.dart';
+
 class ResgistrationPage extends StatelessWidget {
   const ResgistrationPage({super.key});
 
@@ -24,35 +26,36 @@ class ResgistrationPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               // first name
-              BaTextField(
+              BATextField(
                 labelText: 'First Name',
                 textEditingController: firstNameController,
                 textInputType: TextInputType.name,
               ),
 
               // last name
-              BaTextField(
+              BATextField(
                 labelText: 'Last Name',
                 textEditingController: lastNameController,
                 textInputType: TextInputType.name,
               ),
 
               // email
-              BaTextField(
+              BATextField(
                 labelText: 'Email',
                 textEditingController: emailController,
                 textInputType: TextInputType.emailAddress,
               ),
 
               // password
-              BaTextField(
+              BATextField(
                 labelText: 'Password',
                 textEditingController: passwordController,
+                textInputType: TextInputType.visiblePassword,
                 obscureText: true,
               ),
 
               // account type
-              BaDropdownButton(
+              BADropdownButton(
                 labelText: 'What type of account would you like to create?',
                 list: const ['Personal', 'Business'],
                 textEditingController: accountTypeController,
@@ -63,12 +66,9 @@ class ResgistrationPage extends StatelessWidget {
               ),
 
               // continue cta
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.purple,
-                  foregroundColor: Colors.white,
-                ),
-                onPressed: () {
+              BAPrimaryButton(
+                text: 'Continue',
+                onPressed: () async {
                   if (formKey.currentState!.validate()) {
                     registerUser(
                       firstNameController.text,
@@ -80,14 +80,7 @@ class ResgistrationPage extends StatelessWidget {
                     );
                   }
                 },
-                child: const Padding(
-                  padding: EdgeInsets.all(20.0),
-                  child: Text(
-                    'Continue',
-                    style: TextStyle(fontWeight: FontWeight.w700),
-                  ),
-                ),
-              )
+              ),
             ],
           ),
         ),

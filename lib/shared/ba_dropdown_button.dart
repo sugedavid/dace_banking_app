@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class BaDropdownButton extends StatefulWidget {
-  const BaDropdownButton(
+class BADropdownButton extends StatefulWidget {
+  const BADropdownButton(
       {super.key,
       required this.labelText,
       required this.list,
@@ -12,10 +12,10 @@ class BaDropdownButton extends StatefulWidget {
   final TextEditingController textEditingController;
 
   @override
-  State<BaDropdownButton> createState() => _BaDropdownButtonState();
+  State<BADropdownButton> createState() => _BADropdownButtonState();
 }
 
-class _BaDropdownButtonState extends State<BaDropdownButton> {
+class _BADropdownButtonState extends State<BADropdownButton> {
   String dropdownValue = '';
 
   @override
