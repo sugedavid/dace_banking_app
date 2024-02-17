@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 enum TextFieldType { email, name, password }
 
-class BaTextField extends StatelessWidget {
-  const BaTextField(
+class BATextField extends StatelessWidget {
+  const BATextField(
       {super.key,
       required this.labelText,
       required this.textEditingController,

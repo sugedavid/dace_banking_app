@@ -29,48 +29,52 @@ class OnBoardingScaffold extends StatelessWidget {
       body: Center(
           child: Padding(
         padding: const EdgeInsets.all(18.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              title,
-              style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 24),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-
-            // body
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: body,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // title
+              Text(
+                title,
+                style:
+                    const TextStyle(fontWeight: FontWeight.w500, fontSize: 24),
               ),
-            ),
-
-            const SizedBox(
-              height: 30,
-            ),
-
-            RichText(
-              text: TextSpan(
-                text: richActionText,
-                style: defaultStyle,
-                children: <TextSpan>[
-                  TextSpan(
-                    text: richText,
-                    style: linkStyle,
-                    recognizer: TapGestureRecognizer()..onTap = onRichCallTap,
-                  ),
-                ],
+              const SizedBox(
+                height: 20,
               ),
-            ),
 
-            const SizedBox(
-              height: 20,
-            ),
-            // cta
-          ],
+              // body
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: body,
+                ),
+              ),
+
+              const SizedBox(
+                height: 30,
+              ),
+
+              // rich text link
+              RichText(
+                text: TextSpan(
+                  text: richActionText,
+                  style: defaultStyle,
+                  children: <TextSpan>[
+                    TextSpan(
+                      text: richText,
+                      style: linkStyle,
+                      recognizer: TapGestureRecognizer()..onTap = onRichCallTap,
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(
+                height: 20,
+              ),
+            ],
+          ),
         ),
       )),
     );

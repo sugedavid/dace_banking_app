@@ -13,22 +13,27 @@ Future<void> registerUser(
     String businessType,
     BuildContext context) async {
   try {
-    final credential =
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+    await FirebaseAuth.instance
+        .createUserWithEmailAndPassword(
       email: emailAddress,
       password: password,
-    );
-
-    if (context.mounted) {
+    )
+        .then((UserCredential credential) {
+      // update user details
       updateUser(credential, firstName, lastName, businessType, context);
-    }
+    }).catchError((error) {
+      // error handling
+      showToast('Oops! Something went wrong: $error', context);
+    });
   } on FirebaseAuthException catch (e) {
+    // error handling
     if (e.code == 'weak-password') {
       showToast('The password provided is too weak.', context);
     } else if (e.code == 'email-already-in-use') {
       showToast('The account already exists for that email.', context);
     }
   } catch (e) {
+    // error handling
     showToast(
         'Oops! Could not register your account: ${e.toString()}', context);
   }
@@ -38,15 +43,21 @@ Future<void> registerUser(
 Future<void> logInUser(
     String emailAddress, String password, BuildContext context) async {
   try {
-    final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+    await FirebaseAuth.instance
+        .signInWithEmailAndPassword(
       email: emailAddress,
       password: password,
-    );
-    print(credential.toString());
-    if (context.mounted) {
+    )
+        .then((UserCredential value) {
+      // navigate to home page
       showToast('Logged in sucessfully.', context);
-    }
+    }).catchError((error) {
+      // error handling
+      showToast('Oops! Something went wrong: $error', context);
+    });
+    ;
   } on FirebaseAuthException catch (e) {
+    // error handling
     if (e.code == 'user-not-found') {
       showToast('No user found for that email.', context);
     } else if (e.code == 'wrong-password') {
@@ -55,6 +66,7 @@ Future<void> logInUser(
       showToast('Invalid login credentials', context);
     }
   } catch (e) {
+    // error handling
     showToast('Oops! Something went wrong: ${e.toString()}', context);
   }
 }
