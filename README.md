@@ -1,6 +1,6 @@
 # banking_app
 
-A new Flutter project.
+Banking Flutter project.
 
 ## Getting Started
 
