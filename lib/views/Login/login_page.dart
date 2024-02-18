@@ -25,14 +25,14 @@ class LogInPage extends StatelessWidget {
             // email
             BATextField(
               labelText: 'Email',
-              textEditingController: emailController,
+              controller: emailController,
               textInputType: TextInputType.emailAddress,
             ),
 
             // password
             BATextField(
               labelText: 'Password',
-              textEditingController: passwordController,
+              controller: passwordController,
               obscureText: true,
               validate: false,
             ),
@@ -46,7 +46,7 @@ class LogInPage extends StatelessWidget {
               text: 'Continue',
               onPressed: () async {
                 if (formKey.currentState!.validate()) {
-                  logInUser(
+                  await logInUser(
                       emailController.text, passwordController.text, context);
                 }
               },

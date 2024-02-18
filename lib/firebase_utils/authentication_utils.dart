@@ -1,6 +1,6 @@
-// register user
 import 'package:banking_app/firebase_utils/user_utils.dart';
 import 'package:banking_app/shared/ba_toast_notification.dart';
+import 'package:banking_app/shared/main_scaffold.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -51,11 +51,13 @@ Future<void> logInUser(
         .then((UserCredential value) {
       // navigate to home page
       showToast('Logged in sucessfully.', context);
+      MaterialPageRoute(
+        builder: (context) => const MainScaffold(),
+      );
     }).catchError((error) {
       // error handling
       showToast('Oops! Something went wrong: $error', context);
     });
-    ;
   } on FirebaseAuthException catch (e) {
     // error handling
     if (e.code == 'user-not-found') {
@@ -69,4 +71,13 @@ Future<void> logInUser(
     // error handling
     showToast('Oops! Something went wrong: ${e.toString()}', context);
   }
+}
+
+// sign out a user
+Future<void> signOutUser(BuildContext context) async {
+  await FirebaseAuth.instance.signOut().then((value) {
+    showToast('Logged out sucessfully.', context);
+  }).catchError((error) {
+    showToast('Oops! Something went wrong: $error', context);
+  });
 }

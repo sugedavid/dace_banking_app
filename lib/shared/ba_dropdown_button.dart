@@ -5,11 +5,11 @@ class BADropdownButton extends StatefulWidget {
       {super.key,
       required this.labelText,
       required this.list,
-      required this.textEditingController});
+      required this.controller});
 
   final String labelText;
   final List<String> list;
-  final TextEditingController textEditingController;
+  final TextEditingController controller;
 
   @override
   State<BADropdownButton> createState() => _BADropdownButtonState();
@@ -19,29 +19,53 @@ class _BADropdownButtonState extends State<BADropdownButton> {
   String dropdownValue = '';
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
     dropdownValue = widget.list.first;
+    widget.controller.text = dropdownValue;
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(widget.labelText),
-        const SizedBox(
-          height: 5,
-        ),
-        DropdownMenu<String>(
+        // label
+        if (widget.labelText.isNotEmpty) ...{
+          Text(
+            widget.labelText,
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+              color: Colors.amber[800]!,
+            ),
+          ),
+          const SizedBox(
+            height: 5,
+          ),
+        },
+
+        // dropdown
+        SizedBox(
           width: 395,
-          controller: widget.textEditingController,
-          initialSelection: widget.list.first,
-          onSelected: (String? value) {
-            // This is called when the user selects an item.
-            setState(() {
-              dropdownValue = value!;
-            });
-          },
-          dropdownMenuEntries:
-              widget.list.map<DropdownMenuEntry<String>>((String value) {
-            return DropdownMenuEntry<String>(value: value, label: value);
-          }).toList(),
+          child: DropdownButton<String>(
+            isExpanded: true,
+            value: dropdownValue,
+            icon: const Icon(Icons.keyboard_arrow_down),
+            elevation: 16,
+            underline: Container(height: 1, color: Colors.black45),
+            onChanged: (String? value) {
+              setState(() {
+                dropdownValue = value!;
+                widget.controller.text = dropdownValue;
+              });
+            },
+            items: widget.list.map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+          ),
         ),
       ],
     );
