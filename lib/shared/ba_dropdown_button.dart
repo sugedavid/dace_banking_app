@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../utils/colors.dart';
+import '../utils/spacing.dart';
+
 class BADropdownButton extends StatefulWidget {
   const BADropdownButton(
       {super.key,
@@ -21,7 +24,9 @@ class _BADropdownButtonState extends State<BADropdownButton> {
   @override
   void initState() {
     super.initState();
-    dropdownValue = widget.list.first;
+    dropdownValue = widget.controller.text.isNotEmpty
+        ? widget.controller.text
+        : widget.list.first;
     widget.controller.text = dropdownValue;
   }
 
@@ -34,37 +39,50 @@ class _BADropdownButtonState extends State<BADropdownButton> {
         if (widget.labelText.isNotEmpty) ...{
           Text(
             widget.labelText,
-            style: TextStyle(
+            style: const TextStyle(
               fontWeight: FontWeight.w500,
-              color: Colors.amber[800]!,
+              color: AppColors.primaryColor,
             ),
           ),
-          const SizedBox(
-            height: 5,
-          ),
+          AppSpacing.xSmall
         },
 
         // dropdown
         SizedBox(
           width: 395,
-          child: DropdownButton<String>(
-            isExpanded: true,
-            value: dropdownValue,
-            icon: const Icon(Icons.keyboard_arrow_down),
-            elevation: 16,
-            underline: Container(height: 1, color: Colors.black45),
-            onChanged: (String? value) {
-              setState(() {
-                dropdownValue = value!;
-                widget.controller.text = dropdownValue;
-              });
-            },
-            items: widget.list.map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
+          child: DropdownButtonHideUnderline(
+            child: DropdownButtonFormField<String>(
+              isExpanded: true,
+              value: dropdownValue,
+              icon: const Icon(Icons.keyboard_arrow_down),
+              elevation: 16,
+              decoration: InputDecoration(
+                hintText: "Select",
+                contentPadding: const EdgeInsets.all(12.0),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(4.0),
+                  borderSide: const BorderSide(color: Colors.grey),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(4.0),
+                  borderSide: const BorderSide(
+                    color: AppColors.primaryColor,
+                  ), // Set focused border color to transparent
+                ),
+              ),
+              onChanged: (String? value) {
+                setState(() {
+                  dropdownValue = value!;
+                  widget.controller.text = dropdownValue;
+                });
+              },
+              items: widget.list.map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+            ),
           ),
         ),
       ],

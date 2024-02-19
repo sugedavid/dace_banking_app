@@ -1,4 +1,5 @@
 import 'package:banking_app/shared/main_scaffold.dart';
+import 'package:banking_app/utils/colors.dart';
 import 'package:banking_app/views/Login/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -33,9 +34,9 @@ class _MyAppState extends State<MyApp> {
     });
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Banking App',
+      title: 'DACE',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.amber[800]!),
+        colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primaryColor),
         useMaterial3: true,
       ),
       home: _userLoggedIn ? const MainScaffold() : const LogInPage(),
