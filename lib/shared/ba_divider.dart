@@ -6,10 +6,10 @@ class BADivider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Divider(
-      color: Colors.grey,
+      color: Colors.black12,
       height: 1,
       thickness: 0.5,
-      indent: 20,
+      indent: 56,
       endIndent: 20,
     );
   }

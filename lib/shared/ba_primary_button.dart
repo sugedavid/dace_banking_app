@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../utils/colors.dart';
+
 class BAPrimaryButton extends StatefulWidget {
   final String text;
   final Future<void> Function() onPressed;
@@ -30,8 +32,11 @@ class BAPrimaryButtonState extends State<BAPrimaryButton> {
       width: 395,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.amber[800],
+          backgroundColor: AppColors.primaryColor,
           foregroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(4.0),
+          ),
         ),
         onPressed: isLoading || !widget.isTextChanged
             ? null
@@ -41,10 +46,10 @@ class BAPrimaryButtonState extends State<BAPrimaryButton> {
                 toggleLoading(false);
               },
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(14.0),
           child: isLoading
-              ? CircularProgressIndicator(
-                  color: Colors.amber[800],
+              ? const CircularProgressIndicator(
+                  color: AppColors.primaryColor,
                 )
               : Text(
                   widget.text,

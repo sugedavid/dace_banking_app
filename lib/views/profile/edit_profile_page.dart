@@ -1,7 +1,8 @@
 import 'package:banking_app/models/user.dart';
+import 'package:banking_app/utils/spacing.dart';
 import 'package:flutter/material.dart';
 
-import '../../firebase_utils/user_utils.dart';
+import '../../utils/firebase_utils/user_utils.dart';
 import '../../shared/ba_dropdown_button.dart';
 import '../../shared/ba_primary_button.dart';
 import '../../shared/ba_text_field.dart';
@@ -117,59 +118,52 @@ class _EditProfilePageState extends State<EditProfilePage> {
       body: SingleChildScrollView(
         child: Center(
           child: Padding(
-            padding: const EdgeInsets.all(24.0),
+            padding: const EdgeInsets.all(30.0),
             child: Form(
               key: formKey,
-              child: Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(18.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const SizedBox(height: 20),
-                      // first name
-                      BATextField(
-                        labelText: 'First Name',
-                        controller: firstNameController,
-                        textInputType: TextInputType.name,
-                      ),
-
-                      // last name
-                      BATextField(
-                        labelText: 'Last Name',
-                        controller: lastNameController,
-                        textInputType: TextInputType.name,
-                      ),
-
-                      // account type
-                      BADropdownButton(
-                        labelText: 'Account Type',
-                        list: const ['Personal', 'Business'],
-                        controller: accountTypeController,
-                      ),
-                      const SizedBox(height: 40),
-
-                      // continue cta
-                      BAPrimaryButton(
-                        text: 'Save',
-                        isTextChanged: (_isFirstNameChanged.value ||
-                            _isLastNameChanged.value ||
-                            _isAccountTypeChanged.value),
-                        onPressed: () async {
-                          if (formKey.currentState!.validate()) {
-                            await updateUserInfo(
-                              firstNameController.text,
-                              lastNameController.text,
-                              accountTypeController.text,
-                              context,
-                            );
-                            if (mounted) Navigator.of(context).pop(true);
-                          }
-                        },
-                      ),
-                    ],
+              child: Column(
+                children: [
+                  BATextField(
+                    labelText: 'First Name',
+                    controller: firstNameController,
+                    textInputType: TextInputType.name,
                   ),
-                ),
+
+                  // last name
+                  BATextField(
+                    labelText: 'Last Name',
+                    controller: lastNameController,
+                    textInputType: TextInputType.name,
+                  ),
+
+                  // account type
+                  BADropdownButton(
+                    labelText: 'Account Type',
+                    list: const ['Personal', 'Business'],
+                    controller: accountTypeController,
+                  ),
+
+                  AppSpacing.veryLarge,
+
+                  // continue cta
+                  BAPrimaryButton(
+                    text: 'Save',
+                    isTextChanged: (_isFirstNameChanged.value ||
+                        _isLastNameChanged.value ||
+                        _isAccountTypeChanged.value),
+                    onPressed: () async {
+                      if (formKey.currentState!.validate()) {
+                        await updateUserInfo(
+                          firstNameController.text,
+                          lastNameController.text,
+                          accountTypeController.text,
+                          context,
+                        );
+                        if (mounted) Navigator.of(context).pop(true);
+                      }
+                    },
+                  ),
+                ],
               ),
             ),
           ),
