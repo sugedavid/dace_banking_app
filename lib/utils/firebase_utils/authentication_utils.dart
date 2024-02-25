@@ -1,4 +1,4 @@
-import 'package:banking_app/firebase_utils/user_utils.dart';
+import 'package:banking_app/utils/firebase_utils/user_utils.dart';
 import 'package:banking_app/shared/ba_toast_notification.dart';
 import 'package:banking_app/shared/main_scaffold.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -10,7 +10,7 @@ Future<void> registerUser(
     String lastName,
     String emailAddress,
     String password,
-    String businessType,
+    String accountType,
     BuildContext context) async {
   try {
     await FirebaseAuth.instance
@@ -20,7 +20,7 @@ Future<void> registerUser(
     )
         .then((UserCredential credential) {
       // update user details
-      updateUser(credential, firstName, lastName, businessType, context);
+      updateUser(credential, firstName, lastName, accountType, context);
     }).catchError((error) {
       // error handling
       showToast('Oops! Something went wrong: $error', context);

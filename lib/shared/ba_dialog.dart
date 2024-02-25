@@ -1,0 +1,32 @@
+import 'package:flutter/material.dart';
+
+class BaDialog {
+  static Future<bool> showBaDialog({
+    required BuildContext context,
+    required String title,
+    required String description,
+    String? cancelText,
+    String? okText,
+    Function()? onCancel,
+    Function()? onOk,
+  }) async {
+    return await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(title),
+        content: Text(description),
+        actions: [
+          if (onCancel != null)
+            TextButton(
+              onPressed: onCancel,
+              child: Text(cancelText ?? "Cancel"),
+            ),
+          TextButton(
+            onPressed: onOk,
+            child: Text(okText ?? "OK"),
+          ),
+        ],
+      ),
+    );
+  }
+}

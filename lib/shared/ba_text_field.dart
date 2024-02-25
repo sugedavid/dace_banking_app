@@ -1,4 +1,7 @@
+import 'package:banking_app/utils/spacing.dart';
 import 'package:flutter/material.dart';
+
+import '../utils/colors.dart';
 
 enum TextFieldType { email, name, password }
 
@@ -74,12 +77,12 @@ class BATextField extends StatelessWidget {
         if (labelText.isNotEmpty) ...{
           Text(
             labelText,
-            style: TextStyle(
+            style: const TextStyle(
               fontWeight: FontWeight.w500,
-              color: Colors.amber[800]!,
+              color: AppColors.primaryColor,
             ),
           ),
-          const SizedBox(height: 8),
+          AppSpacing.xSmall
         },
 
         // text field
@@ -93,10 +96,15 @@ class BATextField extends StatelessWidget {
             keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
               hintText: 'Enter $labelText',
-              // border: const OutlineInputBorder(),
-              focusedBorder: UnderlineInputBorder(
+              contentPadding: const EdgeInsets.all(12.0),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(4.0),
+                borderSide: const BorderSide(color: Colors.white),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(4.0),
                 borderSide: BorderSide(
-                  color: readOnly! ? Colors.black45 : Colors.amber[800]!,
+                  color: readOnly! ? Colors.black45 : AppColors.primaryColor,
                 ), // Set focused border color to transparent
               ),
             ),

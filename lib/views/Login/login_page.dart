@@ -1,6 +1,6 @@
 import 'package:banking_app/shared/ba_primary_button.dart';
 import 'package:banking_app/shared/onboarding_scaffold.dart';
-import 'package:banking_app/firebase_utils/authentication_utils.dart';
+import 'package:banking_app/utils/firebase_utils/authentication_utils.dart';
 import 'package:flutter/material.dart';
 
 import '../../shared/ba_text_field.dart';
@@ -16,7 +16,7 @@ class LogInPage extends StatelessWidget {
     final passwordController = TextEditingController();
 
     return OnBoardingScaffold(
-      title: 'Login',
+      title: 'Welcome',
       body: Form(
         key: formKey,
         child: Column(
@@ -43,7 +43,7 @@ class LogInPage extends StatelessWidget {
 
             // continue cta
             BAPrimaryButton(
-              text: 'Continue',
+              text: 'Sign in',
               onPressed: () async {
                 if (formKey.currentState!.validate()) {
                   await logInUser(
@@ -55,8 +55,8 @@ class LogInPage extends StatelessWidget {
         ),
       ),
       richActionText: "Don't have an account? ",
-      richText: 'Register',
-      onRichCallTap: () => Navigator.of(context).push(
+      richText: 'Sign Up',
+      onRichCallTap: () => Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) => const ResgistrationPage(),
         ),
