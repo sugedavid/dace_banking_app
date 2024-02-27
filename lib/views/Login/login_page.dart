@@ -54,13 +54,16 @@ class LogInPage extends StatelessWidget {
           ],
         ),
       ),
-      richActionText: "Don't have an account? ",
-      richText: 'Sign Up',
-      onRichCallTap: () => Navigator.of(context).pushReplacement(
+      secondaryActionText: "Don't have an account? ",
+      secondaryRichText: 'Sign Up',
+      onSecondaryRichCallTap: () => Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) => const ResgistrationPage(),
         ),
       ),
+      richActionText: 'Forgot Password? ',
+      richText: 'Reset',
+      onRichCallTap: () {},
     );
   }
 }

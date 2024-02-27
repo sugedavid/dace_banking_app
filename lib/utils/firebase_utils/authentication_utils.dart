@@ -21,9 +21,6 @@ Future<void> registerUser(
         .then((UserCredential credential) {
       // update user details
       updateUser(credential, firstName, lastName, accountType, context);
-    }).catchError((error) {
-      // error handling
-      showToast('Oops! Something went wrong: $error', context);
     });
   } on FirebaseAuthException catch (e) {
     // error handling
@@ -31,6 +28,8 @@ Future<void> registerUser(
       showToast('The password provided is too weak.', context);
     } else if (e.code == 'email-already-in-use') {
       showToast('The account already exists for that email.', context);
+    } else {
+      showToast(e.message ?? 'Oops! Something went wrong', context);
     }
   } catch (e) {
     // error handling
@@ -50,22 +49,23 @@ Future<void> logInUser(
     )
         .then((UserCredential value) {
       // navigate to home page
-      showToast('Logged in sucessfully.', context);
-      MaterialPageRoute(
-        builder: (context) => const MainScaffold(),
+      showToast('Signed in sucessfully.', context);
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => const MainScaffold(),
+        ),
       );
-    }).catchError((error) {
-      // error handling
-      showToast('Oops! Something went wrong: $error', context);
     });
   } on FirebaseAuthException catch (e) {
-    // error handling
+    // firebase error handling
     if (e.code == 'user-not-found') {
       showToast('No user found for that email.', context);
     } else if (e.code == 'wrong-password') {
       showToast('Wrong password provided for that user.', context);
     } else if (e.code == 'INVALID_LOGIN_CREDENTIALS') {
       showToast('Invalid login credentials', context);
+    } else {
+      showToast(e.message ?? 'Oops! Something went wrong', context);
     }
   } catch (e) {
     // error handling
@@ -78,6 +78,7 @@ Future<void> signOutUser(BuildContext context) async {
   await FirebaseAuth.instance.signOut().then((value) {
     showToast('Logged out sucessfully.', context);
   }).catchError((error) {
+    // error handling
     showToast('Oops! Something went wrong: $error', context);
   });
 }

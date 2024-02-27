@@ -36,7 +36,8 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       title: 'DACE',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primaryColor),
+        colorScheme: ColorScheme.fromSeed(
+            seedColor: AppColors.primaryColor, surface: Colors.white),
         useMaterial3: true,
       ),
       home: _userLoggedIn ? const MainScaffold() : const LogInPage(),
