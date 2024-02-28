@@ -7,10 +7,10 @@ class BADivider extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Divider(
       color: Colors.black12,
-      height: 1,
+      height: 0.5,
       thickness: 0.5,
       indent: 56,
-      endIndent: 20,
+      endIndent: 0,
     );
   }
 }

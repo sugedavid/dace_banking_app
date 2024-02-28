@@ -1,4 +1,5 @@
 import 'package:banking_app/models/user.dart';
+import 'package:banking_app/utils/colors.dart';
 import 'package:banking_app/utils/spacing.dart';
 import 'package:flutter/material.dart';
 
@@ -109,6 +110,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
         title: const Text(
           'Edit Profile',
@@ -118,52 +120,62 @@ class _EditProfilePageState extends State<EditProfilePage> {
       body: SingleChildScrollView(
         child: Center(
           child: Padding(
-            padding: const EdgeInsets.all(30.0),
-            child: Form(
-              key: formKey,
-              child: Column(
-                children: [
-                  BATextField(
-                    labelText: 'First Name',
-                    controller: firstNameController,
-                    textInputType: TextInputType.name,
-                  ),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 20),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.surface,
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              padding: const EdgeInsets.all(24.0),
+              child: Form(
+                key: formKey,
+                child: Column(
+                  children: [
+                    AppSpacing.medium,
 
-                  // last name
-                  BATextField(
-                    labelText: 'Last Name',
-                    controller: lastNameController,
-                    textInputType: TextInputType.name,
-                  ),
+                    // first name
+                    BATextField(
+                      labelText: 'First Name',
+                      controller: firstNameController,
+                      textInputType: TextInputType.name,
+                    ),
 
-                  // account type
-                  BADropdownButton(
-                    labelText: 'Account Type',
-                    list: const ['Personal', 'Business'],
-                    controller: accountTypeController,
-                  ),
+                    // last name
+                    BATextField(
+                      labelText: 'Last Name',
+                      controller: lastNameController,
+                      textInputType: TextInputType.name,
+                    ),
 
-                  AppSpacing.veryLarge,
+                    // account type
+                    BADropdownButton(
+                      labelText: 'Account Type',
+                      list: const ['Personal', 'Business'],
+                      controller: accountTypeController,
+                    ),
 
-                  // continue cta
-                  BAPrimaryButton(
-                    text: 'Save',
-                    isTextChanged: (_isFirstNameChanged.value ||
-                        _isLastNameChanged.value ||
-                        _isAccountTypeChanged.value),
-                    onPressed: () async {
-                      if (formKey.currentState!.validate()) {
-                        await updateUserInfo(
-                          firstNameController.text,
-                          lastNameController.text,
-                          accountTypeController.text,
-                          context,
-                        );
-                        if (mounted) Navigator.of(context).pop(true);
-                      }
-                    },
-                  ),
-                ],
+                    AppSpacing.veryLarge,
+
+                    // continue cta
+                    BAPrimaryButton(
+                      text: 'Save',
+                      isTextChanged: (_isFirstNameChanged.value ||
+                          _isLastNameChanged.value ||
+                          _isAccountTypeChanged.value),
+                      onPressed: () async {
+                        if (formKey.currentState!.validate()) {
+                          await updateUserInfo(
+                            firstNameController.text,
+                            lastNameController.text,
+                            accountTypeController.text,
+                            context,
+                          );
+                          if (mounted) Navigator.of(context).pop(true);
+                        }
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

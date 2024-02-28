@@ -1,4 +1,4 @@
-package com.uol.bankingapp
+package com.uol.dacebanking
 
 import io.flutter.embedding.android.FlutterActivity
 

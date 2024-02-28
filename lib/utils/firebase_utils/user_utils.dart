@@ -14,38 +14,39 @@ final db = FirebaseFirestore.instance;
 // update user
 Future<void> updateUser(UserCredential credential, String firstName,
     String lastName, String accountType, BuildContext context) async {
-  String accountNumber = await generateUniqueAccountNumber();
-  final user = <String, dynamic>{
-    'firstName': firstName,
-    'lastName': lastName,
-    'email': credential.user?.email,
-    'accountType': accountType,
-  };
-  // reference to the Firestore collection for user accounts
-  final usersCollection = db.collection('users');
-  // reference to the accounts subcollection for the specified user
-  final bankAccountsCollection =
-      usersCollection.doc(credential.user?.uid).collection('accounts');
-
-  usersCollection.doc(credential.user?.uid).set(user).then((value) {
-    // add a new document to the accounts subcollection
-    bankAccountsCollection.add({
-      'accountNumber': accountNumber,
+  try {
+    String accountNumber = await generateUniqueAccountNumber();
+    final user = <String, dynamic>{
+      'firstName': firstName,
+      'lastName': lastName,
+      'email': credential.user?.email,
       'accountType': accountType,
-      // add other fields as needed
-    }).then((value) {
-      showToast('Account created sucessfully!', context);
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => const MainScaffold(),
-        ),
-      );
-    }).catchError((error) {
-      showToast('Oops! Something went wrong: $error', context);
+    };
+    // reference to the Firestore collection for user accounts
+    final usersCollection = db.collection('users');
+    // reference to the accounts subcollection for the specified user
+    final bankAccountsCollection =
+        usersCollection.doc(credential.user?.uid).collection('accounts');
+
+    usersCollection.doc(credential.user?.uid).set(user).then((value) {
+      // add a new document to the accounts subcollection
+      bankAccountsCollection.add({
+        'accountNumber': accountNumber,
+        'accountType': accountType,
+        // add other fields as needed
+      }).then((value) {
+        showToast('Account created sucessfully!', context);
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => const MainScaffold(),
+          ),
+        );
+      });
     });
-  }).catchError((error) {
+  } catch (error) {
+    // error handling
     showToast('Oops! Something went wrong: $error', context);
-  });
+  }
 }
 
 // function to generate a unique account number
@@ -139,8 +140,6 @@ Future<void> updateUserInfo(String firstName, String lastName,
         'accountType': accountType,
       }).then((value) {
         showToast('Profile updated sucessfully!', context);
-      }).catchError((error) {
-        showToast('Oops! Something went wrong: $error', context);
       });
     } catch (error) {
       // error updating user information
@@ -172,8 +171,6 @@ Future<void> closeUserAccount(BuildContext context) async {
       await db.collection('users').doc(user.uid).delete().then((value) async {
         // delete the user account
         await user.delete();
-      }).catchError((error) {
-        showToast('Error closing your account: $error', context);
       });
 
       if (context.mounted) {
@@ -199,8 +196,6 @@ Future<void> resetPassword(String email, BuildContext context) async {
   try {
     await FirebaseAuth.instance.sendPasswordResetEmail(email: email).then((_) {
       showToast('Password reset email sent!', context);
-    }).catchError((error) {
-      showToast('Error sending password reset email: $error', context);
     });
   } catch (error) {
     // error sending password reset email

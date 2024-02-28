@@ -13,6 +13,9 @@ class OnBoardingScaffold extends StatelessWidget {
     required this.richText,
     required this.richActionText,
     required this.onRichCallTap,
+    this.secondaryRichText,
+    this.secondaryActionText,
+    this.onSecondaryRichCallTap,
   });
 
   final String title;
@@ -20,6 +23,9 @@ class OnBoardingScaffold extends StatelessWidget {
   final String richText;
   final String richActionText;
   final Function() onRichCallTap;
+  final String? secondaryRichText;
+  final String? secondaryActionText;
+  final Function()? onSecondaryRichCallTap;
 
   @override
   Widget build(BuildContext context) {
@@ -85,6 +91,27 @@ class OnBoardingScaffold extends StatelessWidget {
                       ),
                     ),
                   ),
+                  AppSpacing.small,
+
+                  if (secondaryRichText != null)
+                    // secondary action
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: RichText(
+                        text: TextSpan(
+                          text: secondaryActionText,
+                          style: defaultStyle,
+                          children: <TextSpan>[
+                            TextSpan(
+                              text: secondaryRichText,
+                              style: linkStyle,
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = onSecondaryRichCallTap,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
 
                   const SizedBox(
                     height: 20,

@@ -1,4 +1,5 @@
 import 'package:banking_app/utils/assets.dart';
+import 'package:banking_app/views/transactions/transactions_page.dart';
 import 'package:flutter/material.dart';
 
 import '../utils/colors.dart';
@@ -48,10 +49,7 @@ class _MainScaffoldState extends State<MainScaffold> {
       userData = fetchedUserData;
       _widgetOptions = <Widget>[
         const HomePage(),
-        const Text(
-          'Transfers',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
+        const TransactionsPage(),
         ProfilePage(
           userData: userData,
         ),
@@ -70,6 +68,7 @@ class _MainScaffoldState extends State<MainScaffold> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Image.asset(
@@ -98,16 +97,14 @@ class _MainScaffoldState extends State<MainScaffold> {
             ),
         ],
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: _isLoading
-              ? const CircularProgressIndicator(
-                  color: AppColors.primaryColor,
-                )
-              : _widgetOptions.elementAt(_selectedIndex),
-        ),
-      ),
+      body: _isLoading
+          ? const LinearProgressIndicator(
+              color: AppColors.primaryColor,
+            )
+          : Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: _widgetOptions.elementAt(_selectedIndex),
+            ),
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -116,16 +113,14 @@ class _MainScaffoldState extends State<MainScaffold> {
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              _selectedIndex == 1
-                  ? Icons.compare_arrows
-                  : Icons.compare_arrows_outlined,
+              _selectedIndex == 1 ? Icons.history : Icons.history_outlined,
             ),
-            label: 'Transfers',
+            label: 'Transactions',
           ),
           BottomNavigationBarItem(
-            icon:
-                Icon(_selectedIndex == 2 ? Icons.person : Icons.person_outline),
-            label: 'Profile',
+            icon: Icon(
+                _selectedIndex == 2 ? Icons.settings : Icons.settings_outlined),
+            label: 'Settings',
           ),
         ],
         currentIndex: _selectedIndex,
