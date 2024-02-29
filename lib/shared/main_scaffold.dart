@@ -27,10 +27,12 @@ class _MainScaffoldState extends State<MainScaffold> {
   }
 
   UserModel userData = UserModel(
+    userId: '',
     firstName: '',
     lastName: '',
     email: '',
     accountType: '',
+    accounts: [],
   );
 
   bool _isLoading = false;
@@ -48,7 +50,9 @@ class _MainScaffoldState extends State<MainScaffold> {
     setState(() {
       userData = fetchedUserData;
       _widgetOptions = <Widget>[
-        const HomePage(),
+        HomePage(
+          userData: userData,
+        ),
         const TransactionsPage(),
         ProfilePage(
           userData: userData,
