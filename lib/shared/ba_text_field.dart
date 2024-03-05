@@ -1,5 +1,6 @@
 import 'package:banking_app/utils/spacing.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../utils/colors.dart';
 
@@ -10,20 +11,26 @@ class BATextField extends StatelessWidget {
     super.key,
     required this.labelText,
     required this.controller,
+    this.hintText,
     this.textInputType,
     this.obscureText = false,
     this.validate = true,
     this.enabled = true,
     this.readOnly = false,
+    this.validator,
+    this.inputFormatters,
   });
 
   final String labelText;
+  final String? hintText;
   final TextEditingController controller;
   final TextInputType? textInputType;
   final bool? obscureText;
   final bool? validate;
   final bool? enabled;
   final bool? readOnly;
+  final Function()? validator;
+  final List<TextInputFormatter>? inputFormatters;
 
   String? Function(String?)? _validator() {
     // email validation
@@ -62,6 +69,17 @@ class BATextField extends StatelessWidget {
         return null;
       };
     }
+
+    // custom validation
+    else if (validator != null) {
+      return (value) {
+        if (value == null || value.isEmpty) {
+          return 'Please enter your $labelText';
+        } else {
+          return validator!();
+        }
+      };
+    }
     // no validation
     else {
       return null;
@@ -70,17 +88,30 @@ class BATextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String hint = hintText ?? 'Enter $labelText';
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // label
         if (labelText.isNotEmpty) ...{
-          Text(
-            labelText,
-            style: const TextStyle(
-              fontWeight: FontWeight.w500,
-              color: AppColors.primaryColor,
-            ),
+          Row(
+            children: [
+              Text(
+                labelText,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.primaryColor,
+                ),
+              ),
+              if (validate!)
+                const Text(
+                  '*',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    color: Colors.red,
+                  ),
+                ),
+            ],
           ),
           AppSpacing.xSmall
         },
@@ -93,9 +124,9 @@ class BATextField extends StatelessWidget {
             readOnly: readOnly!,
             obscureText: obscureText!,
             controller: controller,
-            keyboardType: TextInputType.emailAddress,
+            keyboardType: textInputType,
             decoration: InputDecoration(
-              hintText: 'Enter $labelText',
+              hintText: hint,
               contentPadding: const EdgeInsets.all(12.0),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(4.0),
@@ -108,12 +139,11 @@ class BATextField extends StatelessWidget {
                 ), // Set focused border color to transparent
               ),
             ),
-            validator: _validator(),
+            validator: validate! ? _validator() : null,
+            inputFormatters: inputFormatters,
           ),
         ),
-        const SizedBox(
-          height: 20,
-        ),
+        AppSpacing.large,
       ],
     );
   }

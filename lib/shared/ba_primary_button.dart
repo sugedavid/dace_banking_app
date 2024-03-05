@@ -5,13 +5,13 @@ import '../utils/colors.dart';
 class BAPrimaryButton extends StatefulWidget {
   final String text;
   final Future<void> Function() onPressed;
-  final bool isTextChanged;
+  final bool enable;
 
   const BAPrimaryButton({
     Key? key,
     required this.text,
     required this.onPressed,
-    this.isTextChanged = true,
+    this.enable = true,
   }) : super(key: key);
 
   @override
@@ -38,7 +38,7 @@ class BAPrimaryButtonState extends State<BAPrimaryButton> {
             borderRadius: BorderRadius.circular(4.0),
           ),
         ),
-        onPressed: isLoading || !widget.isTextChanged
+        onPressed: isLoading || !widget.enable
             ? null
             : () async {
                 toggleLoading(true);
