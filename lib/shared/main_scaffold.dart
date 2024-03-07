@@ -53,7 +53,9 @@ class _MainScaffoldState extends State<MainScaffold> {
         HomePage(
           userData: userData,
         ),
-        const TransactionsPage(),
+        TransactionsPage(
+          userData: userData,
+        ),
         ProfilePage(
           userData: userData,
         ),
@@ -69,16 +71,32 @@ class _MainScaffoldState extends State<MainScaffold> {
     });
   }
 
+  Widget title() {
+    if (_selectedIndex == 0) {
+      return Image.asset(
+        AppAssets.logoImg,
+        height: 44,
+      );
+    } else if (_selectedIndex == 1) {
+      return const Text(
+        'Transactions',
+        style: TextStyle(fontWeight: FontWeight.bold),
+      );
+    } else {
+      return const Text(
+        'Settings',
+        style: TextStyle(fontWeight: FontWeight.bold),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Image.asset(
-          AppAssets.logoImg,
-          height: 44,
-        ),
+        title: title(),
         actions: [
           // edit profile
           if (_selectedIndex == 2)
@@ -106,7 +124,8 @@ class _MainScaffoldState extends State<MainScaffold> {
               color: AppColors.primaryColor,
             )
           : Padding(
-              padding: const EdgeInsets.all(12.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 12.0, vertical: 20.0),
               child: _widgetOptions.elementAt(_selectedIndex),
             ),
       bottomNavigationBar: BottomNavigationBar(

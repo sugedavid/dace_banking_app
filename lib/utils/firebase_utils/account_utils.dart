@@ -34,7 +34,7 @@ Future<void> updateAccountBalance(
           dbInstance.collection('transactions').doc(transactionId);
       var transaction = TransactionModel(
         transactionId: transactionRef.id,
-        transactionType: 'deposit',
+        transactionType: 'Deposit',
         transactionStatus: 'completed',
         transactionDescription: transactionDescription,
         userId: userId,
