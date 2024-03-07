@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 
 class BADivider extends StatelessWidget {
-  const BADivider({super.key});
+  const BADivider({super.key, this.indent = 0.0});
+
+  final double indent;
 
   @override
   Widget build(BuildContext context) {
-    return const Divider(
+    return Divider(
       color: Colors.black12,
-      height: 1,
+      height: 0.5,
       thickness: 0.5,
-      indent: 56,
-      endIndent: 20,
+      indent: indent,
+      endIndent: 0,
     );
   }
 }

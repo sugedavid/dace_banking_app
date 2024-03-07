@@ -36,13 +36,25 @@ class _BADropdownButtonState extends State<BADropdownButton> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // label
+        // label
         if (widget.labelText.isNotEmpty) ...{
-          Text(
-            widget.labelText,
-            style: const TextStyle(
-              fontWeight: FontWeight.w500,
-              color: AppColors.primaryColor,
-            ),
+          Row(
+            children: [
+              Text(
+                widget.labelText,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.primaryColor,
+                ),
+              ),
+              const Text(
+                '*',
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  color: Colors.red,
+                ),
+              ),
+            ],
           ),
           AppSpacing.xSmall
         },
@@ -85,6 +97,8 @@ class _BADropdownButtonState extends State<BADropdownButton> {
             ),
           ),
         ),
+
+        AppSpacing.large,
       ],
     );
   }

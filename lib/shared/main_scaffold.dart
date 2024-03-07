@@ -1,4 +1,5 @@
 import 'package:banking_app/utils/assets.dart';
+import 'package:banking_app/views/transactions/transactions_page.dart';
 import 'package:flutter/material.dart';
 
 import '../utils/colors.dart';
@@ -26,10 +27,12 @@ class _MainScaffoldState extends State<MainScaffold> {
   }
 
   UserModel userData = UserModel(
+    userId: '',
     firstName: '',
     lastName: '',
     email: '',
     accountType: '',
+    accounts: [],
   );
 
   bool _isLoading = false;
@@ -47,10 +50,11 @@ class _MainScaffoldState extends State<MainScaffold> {
     setState(() {
       userData = fetchedUserData;
       _widgetOptions = <Widget>[
-        const HomePage(),
-        const Text(
-          'Transfers',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        HomePage(
+          userData: userData,
+        ),
+        TransactionsPage(
+          userData: userData,
         ),
         ProfilePage(
           userData: userData,
@@ -67,15 +71,32 @@ class _MainScaffoldState extends State<MainScaffold> {
     });
   }
 
+  Widget title() {
+    if (_selectedIndex == 0) {
+      return Image.asset(
+        AppAssets.logoImg,
+        height: 44,
+      );
+    } else if (_selectedIndex == 1) {
+      return const Text(
+        'Transactions',
+        style: TextStyle(fontWeight: FontWeight.bold),
+      );
+    } else {
+      return const Text(
+        'Settings',
+        style: TextStyle(fontWeight: FontWeight.bold),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Image.asset(
-          AppAssets.logoImg,
-          height: 44,
-        ),
+        title: title(),
         actions: [
           // edit profile
           if (_selectedIndex == 2)
@@ -98,16 +119,15 @@ class _MainScaffoldState extends State<MainScaffold> {
             ),
         ],
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: _isLoading
-              ? const CircularProgressIndicator(
-                  color: AppColors.primaryColor,
-                )
-              : _widgetOptions.elementAt(_selectedIndex),
-        ),
-      ),
+      body: _isLoading
+          ? const LinearProgressIndicator(
+              color: AppColors.primaryColor,
+            )
+          : Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 12.0, vertical: 20.0),
+              child: _widgetOptions.elementAt(_selectedIndex),
+            ),
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -116,16 +136,14 @@ class _MainScaffoldState extends State<MainScaffold> {
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              _selectedIndex == 1
-                  ? Icons.compare_arrows
-                  : Icons.compare_arrows_outlined,
+              _selectedIndex == 1 ? Icons.history : Icons.history_outlined,
             ),
-            label: 'Transfers',
+            label: 'Transactions',
           ),
           BottomNavigationBarItem(
-            icon:
-                Icon(_selectedIndex == 2 ? Icons.person : Icons.person_outline),
-            label: 'Profile',
+            icon: Icon(
+                _selectedIndex == 2 ? Icons.settings : Icons.settings_outlined),
+            label: 'Settings',
           ),
         ],
         currentIndex: _selectedIndex,
