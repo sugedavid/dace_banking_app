@@ -1,6 +1,7 @@
 import 'package:banking_app/shared/ba_toast_notification.dart';
 import 'package:banking_app/shared/main_scaffold.dart';
 import 'package:banking_app/utils/firebase_utils/user_utils.dart';
+import 'package:banking_app/views/Login/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -77,6 +78,11 @@ Future<void> logInUser(
 Future<void> signOutUser(BuildContext context) async {
   await FirebaseAuth.instance.signOut().then((value) {
     showToast('Logged out sucessfully.', context);
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (context) => const LogInPage(),
+        ),
+        (route) => false);
   }).catchError((error) {
     // error handling
     showToast('Oops! Something went wrong: $error', context);

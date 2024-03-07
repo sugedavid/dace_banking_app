@@ -31,8 +31,6 @@ class ProfilePageState extends State<ProfilePage> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          AppSpacing.xSmall,
-
           // profile
           Container(
             decoration: BoxDecoration(
@@ -49,7 +47,7 @@ class ProfilePageState extends State<ProfilePage> {
                   subtitle: Text(
                       '${widget.userData.firstName} ${widget.userData.lastName}'),
                 ),
-                const BADivider(),
+                const BADivider(indent: 56),
 
                 // email
                 ListTile(
@@ -57,7 +55,7 @@ class ProfilePageState extends State<ProfilePage> {
                   title: const Text('Email'),
                   subtitle: Text(widget.userData.email),
                 ),
-                const BADivider(),
+                const BADivider(indent: 56),
 
                 // // accounts
                 // const ListTile(
@@ -74,7 +72,7 @@ class ProfilePageState extends State<ProfilePage> {
                   title: const Text('Account Type'),
                   subtitle: Text(widget.userData.accountType),
                 ),
-                const BADivider(),
+                const BADivider(indent: 56),
 
                 // reset email
                 ListTile(
@@ -143,7 +141,7 @@ class ProfilePageState extends State<ProfilePage> {
                     style: TextStyle(color: Colors.red),
                   ),
                 ),
-                const BADivider(),
+                const BADivider(indent: 56),
 
                 // sign out
                 ListTile(

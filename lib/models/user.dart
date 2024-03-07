@@ -50,7 +50,7 @@ class UserModel {
       'lastName': lastName,
       'email': email,
       'accountType': accountType,
-      'accounts': accounts.map((account) => account.toMap()).toList(),
+      // 'accounts': accounts.map((account) => account.toMap()).toList(),
     };
   }
 

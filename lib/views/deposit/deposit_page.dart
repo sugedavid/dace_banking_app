@@ -49,12 +49,12 @@ class _DepositPageState extends State<DepositPage> {
             // amount
             BATextField(
               labelText: 'Amount',
-              hintText: 'Minimum £10',
+              hintText: 'Minimum £5',
               controller: amountController,
               textInputType: TextInputType.number,
               validator: () {
-                if (double.parse(amountController.text) < 10) {
-                  return 'Minimum £10';
+                if (double.parse(amountController.text) < 5) {
+                  return 'Minimum £5';
                 }
                 return null;
               },
