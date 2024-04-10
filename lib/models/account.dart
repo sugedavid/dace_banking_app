@@ -21,7 +21,7 @@ class AccountModel {
       accountNumber: data['accountNumber'] ?? '',
       createdAt: data['createdAt'] ?? '',
       updatedAt: data['updatedAt'] ?? '',
-      amount: data['amount'] ?? '',
+      amount: data['amount'] ?? '0',
       accountType: data['accountType'] ?? '',
     );
   }

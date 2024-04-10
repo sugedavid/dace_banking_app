@@ -46,7 +46,7 @@ Future<void> updateAccountBalance(
       await transactionRef.set(transaction.toMap());
 
       if (context.mounted) {
-        showToast('Account balance updated sucessfully!', context);
+        showToast('Account credited sucessfully!', context);
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
               builder: (context) => const MainScaffold(),
@@ -55,8 +55,61 @@ Future<void> updateAccountBalance(
       }
     });
   } catch (error) {
-    // error updating account balance
-    showToast('Error updating account balance: $error', context);
+    // error
+    showToast('Error crediting account: $error', context);
+  }
+}
+
+// withdraw cash
+Future<void> withdrawCash(
+    {required String userId,
+    required String accountId,
+    required String accountNumber,
+    required String amount,
+    required String newBalance,
+    required String transactionDescription,
+    required BuildContext context}) async {
+  try {
+    String createdAt = DateFormat('yyyy-MM-dd HH:mm').format(DateTime.now());
+
+    await dbInstance
+        .collection('users')
+        .doc(userId)
+        .collection('accounts')
+        .doc(accountId)
+        .update({
+      'amount': newBalance,
+      'updatedAt': createdAt,
+    }).then((value) async {
+      // generate transaction
+      var transactionId = dbInstance.collection('transactions').doc().id;
+      var transactionRef =
+          dbInstance.collection('transactions').doc(transactionId);
+      var transaction = TransactionModel(
+        transactionId: transactionRef.id,
+        transactionType: 'Withdraw',
+        transactionStatus: 'completed',
+        transactionDescription: transactionDescription,
+        userId: userId,
+        accountId: accountId,
+        accountNumber: accountNumber,
+        createdAt: createdAt,
+        amount: amount,
+      );
+      await transactionRef.set(transaction.toMap());
+
+      if (context.mounted) {
+        showToast('Cash withdrawn sucessfully!', context);
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+              builder: (context) => const MainScaffold(),
+            ),
+            (route) => false);
+      }
+    });
+  } catch (error) {
+    // error
+    showToast('Error withdrawing cash: $error', context);
   }
 }
 

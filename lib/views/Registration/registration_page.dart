@@ -2,7 +2,7 @@ import 'package:banking_app/utils/firebase_utils/authentication_utils.dart';
 import 'package:banking_app/shared/ba_dropdown_button.dart';
 import 'package:banking_app/shared/onboarding_scaffold.dart';
 import 'package:banking_app/shared/ba_text_field.dart';
-import 'package:banking_app/views/Login/login_page.dart';
+import 'package:banking_app/views/login/login_page.dart';
 import 'package:flutter/material.dart';
 
 import '../../shared/ba_primary_button.dart';
