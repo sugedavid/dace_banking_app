@@ -15,6 +15,7 @@ class BATextField extends StatelessWidget {
     this.textInputType,
     this.obscureText = false,
     this.validate = true,
+    this.showOptional = true,
     this.enabled = true,
     this.readOnly = false,
     this.validator,
@@ -27,6 +28,7 @@ class BATextField extends StatelessWidget {
   final TextInputType? textInputType;
   final bool? obscureText;
   final bool? validate;
+  final bool? showOptional;
   final bool? enabled;
   final bool? readOnly;
   final Function()? validator;
@@ -103,14 +105,17 @@ class BATextField extends StatelessWidget {
                   color: AppColors.primaryColor,
                 ),
               ),
-              if (validate!)
-                const Text(
-                  '*',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    color: Colors.red,
-                  ),
+              Text(
+                validate!
+                    ? '*'
+                    : showOptional!
+                        ? ' (Optional)'
+                        : '',
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  color: validate! ? Colors.red : Colors.grey,
                 ),
+              ),
             ],
           ),
           AppSpacing.xSmall
@@ -126,16 +131,24 @@ class BATextField extends StatelessWidget {
             controller: controller,
             keyboardType: textInputType,
             decoration: InputDecoration(
+              filled: true,
+              fillColor: AppColors.backgroundColor,
               hintText: hint,
+              hintStyle: const TextStyle(color: Colors.grey),
               contentPadding: const EdgeInsets.all(12.0),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(4.0),
                 borderSide: const BorderSide(color: Colors.white),
               ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: const BorderSide(
+                    color: Colors.grey), // Change the border color here
+                borderRadius: BorderRadius.circular(4.0),
+              ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(4.0),
                 borderSide: BorderSide(
-                  color: readOnly! ? Colors.black45 : AppColors.primaryColor,
+                  color: readOnly! ? Colors.grey : AppColors.primaryColor,
                 ), // Set focused border color to transparent
               ),
             ),
@@ -146,5 +159,29 @@ class BATextField extends StatelessWidget {
         AppSpacing.large,
       ],
     );
+  }
+}
+
+// sortcode formatter
+class SortCodeFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    final String formattedText = _formatSortCode(newValue.text);
+    return TextEditingValue(
+      text: formattedText,
+      selection: TextSelection.collapsed(offset: formattedText.length),
+    );
+  }
+
+  String _formatSortCode(String input) {
+    input = input.replaceAll(RegExp(r'[^0-9]'), '');
+    if (input.length >= 3) {
+      return '${input.substring(0, 2)}-${input.substring(2, 4)}-${input.substring(4, input.length)}';
+    } else if (input.length >= 2) {
+      return '${input.substring(0, 2)}-${input.substring(2, input.length)}';
+    } else {
+      return input;
+    }
   }
 }

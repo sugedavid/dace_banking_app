@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import '../../../utils/colors.dart';
 
 class AccountCard extends StatelessWidget {
-  const AccountCard({super.key, required this.accountData});
+  const AccountCard(
+      {super.key, required this.accountData, required this.isLoading});
 
   final AccountModel accountData;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -37,14 +39,21 @@ class AccountCard extends StatelessWidget {
               fontWeight: FontWeight.w500,
             ),
           ),
-          trailing: Text(
-            '£ $amount',
-            style: const TextStyle(
-              fontSize: 24.0,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
-          ),
+          trailing: isLoading
+              ? SizedBox(
+                  width: 20,
+                  child: LinearProgressIndicator(
+                    color: AppColors.accentColor.withOpacity(0.1),
+                  ),
+                )
+              : Text(
+                  '£ $amount',
+                  style: const TextStyle(
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
         ));
   }
 }

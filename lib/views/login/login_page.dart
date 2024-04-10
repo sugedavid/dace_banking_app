@@ -35,6 +35,7 @@ class LogInPage extends StatelessWidget {
               controller: passwordController,
               obscureText: true,
               validate: false,
+              showOptional: false,
             ),
 
             const SizedBox(
