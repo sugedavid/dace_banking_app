@@ -4,6 +4,7 @@ import 'package:banking_app/views/accounts/accounts_page.dart';
 import 'package:banking_app/views/deposit/deposit_page.dart';
 import 'package:banking_app/views/home/components/account_card.dart';
 import 'package:banking_app/views/home/components/service_card.dart';
+import 'package:banking_app/views/withdraw/withdraw_page.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/account.dart';
@@ -72,7 +73,14 @@ class HomePage extends StatelessWidget {
                     color: Colors.redAccent,
                   ),
                   title: 'Withdraw',
-                  onPressed: () {},
+                  onPressed: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => WithdrawPage(
+                        userData: userData,
+                        accountData: accountData,
+                      ),
+                    ),
+                  ),
                 ),
 
                 // transfer
