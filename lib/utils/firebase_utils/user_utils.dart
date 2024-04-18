@@ -9,7 +9,7 @@ import 'package:intl/intl.dart';
 
 import '../../models/account.dart';
 import '../../shared/ba_toast_notification.dart';
-import '../../shared/main_scaffold.dart';
+import '../../views/sucess/sucess_page.dart';
 
 // db reference
 final dbInstance = FirebaseFirestore.instance;
@@ -19,26 +19,23 @@ Future<void> updateUser(UserCredential credential, String firstName,
     String lastName, String accountType, BuildContext context) async {
   try {
     String accountNumber = await generateUniqueAccountNumber();
+    String sortCode = await generateSortCode();
+
     final user = UserModel(
       userId: credential.user?.uid ?? '',
       firstName: firstName,
       lastName: lastName,
       email: credential.user?.email ?? '',
-      accountType: accountType,
-      accounts: [],
     );
-    // reference to the Firestore collection for user accounts
+
+    // reference to the Firestore collection
     final usersCollection = dbInstance.collection('users');
+    final bankAccountsCollection = dbInstance.collection('bankAccounts');
+
     // reference to the accounts subcollection for the specified user
-    final bankAccountsCollectionId = usersCollection
-        .doc(credential.user?.uid)
-        .collection('accounts')
-        .doc()
-        .id;
-    final bankAccountsCollectionRef = usersCollection
-        .doc(credential.user?.uid)
-        .collection('accounts')
-        .doc(bankAccountsCollectionId);
+    final bankAccountsCollectionId = bankAccountsCollection.doc().id;
+    final bankAccountsCollectionRef =
+        bankAccountsCollection.doc(bankAccountsCollectionId);
 
     usersCollection
         .doc(credential.user?.uid)
@@ -49,15 +46,24 @@ Future<void> updateUser(UserCredential credential, String firstName,
         accountId: bankAccountsCollectionId,
         amount: '0.00', // initial balance
         accountNumber: accountNumber,
-        accountType: accountType, createdAt: createdAt, updatedAt: createdAt,
+        accountType: accountType,
+        createdAt: createdAt,
+        updatedAt: createdAt,
+        sortCode: sortCode,
+        currency: '£',
+        firstName: firstName,
+        lastName: lastName,
+        email: credential.user?.email,
+        userId: credential.user?.uid ?? '',
       );
 
       // add a new document to the accounts subcollection
       bankAccountsCollectionRef.set(account.toMap()).then((value) {
-        showToast('Account created sucessfully!', context);
-        Navigator.of(context).pushReplacement(
+        Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => const MainScaffold(),
+            builder: (context) => const SuccessPage(
+              message: 'Account created sucessfully',
+            ),
           ),
         );
       });
@@ -77,15 +83,39 @@ Future<String> generateUniqueAccountNumber() async {
         List<int>.generate(10, (_) => rng.nextInt(10)); // for 10 digits
     String accountNumber = digits.join();
 
-    // Query all accounts subcollections of all users for the generated account number
+    // query all accounts subcollections of all users for the generated account number
     var querySnapshot = await dbInstance
         .collectionGroup('accounts')
         .where('accountNumber', isEqualTo: accountNumber)
         .get();
 
     if (querySnapshot.docs.isEmpty) {
-      // If the account number does not exist in the database, it's unique and we can use it
+      // if the account number does not exist in the database, it's unique and we can use it
       return accountNumber;
+    }
+  }
+}
+
+// function to generate a unique sort code
+Future<String> generateSortCode() async {
+  while (true) {
+    List<String> parts = [];
+    for (var i = 0; i < 3; i++) {
+      // generate a random two-digit number between 00 and 99 (inclusive).
+      String part = Random().nextInt(100).toString().padLeft(2, '0');
+      parts.add(part);
+    }
+    String sortCode = parts.join('-');
+
+    // query all accounts subcollections of all users for the generated sort code
+    var querySnapshot = await dbInstance
+        .collectionGroup('accounts')
+        .where('sortCode', isEqualTo: sortCode)
+        .get();
+
+    if (querySnapshot.docs.isEmpty) {
+      // if the account number does not exist in the database, it's unique and we can use it
+      return sortCode;
     }
   }
 }
@@ -104,8 +134,6 @@ Future<UserModel> authUserInfo(BuildContext context) async {
       firstName: '',
       lastName: '',
       email: '',
-      accountType: '',
-      accounts: [],
     );
     try {
       DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
@@ -120,25 +148,6 @@ Future<UserModel> authUserInfo(BuildContext context) async {
       if (documentSnapshot.exists) {
         // user document found
         data = documentSnapshot.data() as UserModel;
-
-        // fetch accounts from subcollection
-        QuerySnapshot accountsSnapshot = await FirebaseFirestore.instance
-            .collection('users')
-            .doc(user.uid)
-            .collection('accounts')
-            .get();
-
-        // convert account documents to AccountModel objects
-        List<AccountModel> accounts = accountsSnapshot.docs
-            .map(
-              (doc) =>
-                  AccountModel.fromMap(doc.data()! as Map<String, dynamic>),
-            )
-            .toList();
-
-        // update UserModel with fetched accounts
-        data = data.copyWith(accounts: accounts);
-
         return data;
       } else {
         // user document does not exist
@@ -152,20 +161,13 @@ Future<UserModel> authUserInfo(BuildContext context) async {
   } else {
     // user is not authenticated
     showToast('You are not authenticated', context);
-    return UserModel(
-      userId: '',
-      firstName: '',
-      lastName: '',
-      email: '',
-      accountType: '',
-      accounts: [],
-    );
+    return UserModel.toEmpty();
   }
 }
 
 // update user information
-Future<void> updateUserInfo(String firstName, String lastName,
-    String accountType, BuildContext context) async {
+Future<void> updateUserInfo(
+    String firstName, String lastName, BuildContext context) async {
   var user = authUser();
   if (user != null) {
     try {
@@ -175,18 +177,30 @@ Future<void> updateUserInfo(String firstName, String lastName,
           .update({
         'firstName': firstName,
         'lastName': lastName,
-        'accountType': accountType,
       }).then((value) {
         showToast('Profile updated sucessfully!', context);
       });
     } catch (error) {
-      // error updating user information
-      showToast('Error updating your information: $error', context);
+      // error updating user profile
+      showToast('Error updating your profile: $error', context);
     }
   } else {
     // user is not authenticated
     showToast('You are not authenticated', context);
   }
+}
+
+// fetch user bank accounts
+Future<List<AccountModel>> fetchBankAccountsByUserId(String userId) async {
+  CollectionReference bankAccountsRef =
+      FirebaseFirestore.instance.collection('bankAccounts');
+  QuerySnapshot querySnapshot =
+      await bankAccountsRef.where('userId', isEqualTo: userId).get();
+  List<DocumentSnapshot> documents = querySnapshot.docs;
+  List<AccountModel> bankAccounts = documents.map((document) {
+    return AccountModel.fromDocument(document);
+  }).toList();
+  return bankAccounts;
 }
 
 // close user account

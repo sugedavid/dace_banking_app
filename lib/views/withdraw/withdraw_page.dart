@@ -14,10 +14,14 @@ import '../../utils/spacing.dart';
 
 class WithdrawPage extends StatefulWidget {
   const WithdrawPage(
-      {super.key, required this.userData, required this.accountData});
+      {super.key,
+      required this.userData,
+      required this.currentAccount,
+      required this.bankAccounts});
 
   final UserModel userData;
-  final AccountModel accountData;
+  final AccountModel currentAccount;
+  final List<AccountModel> bankAccounts;
 
   @override
   State<WithdrawPage> createState() => _WithdrawPageState();
@@ -27,7 +31,6 @@ class _WithdrawPageState extends State<WithdrawPage> {
   final formKey = GlobalKey<FormState>();
   final accountController = TextEditingController();
   final amountController = TextEditingController();
-  final descriptionController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -42,8 +45,7 @@ class _WithdrawPageState extends State<WithdrawPage> {
             // account
             BADropdownButton(
               labelText: 'Account',
-              list:
-                  widget.userData.accounts.map((e) => e.accountNumber).toList(),
+              list: widget.bankAccounts.map((e) => e.accountNumber).toList(),
               controller: accountController,
             ),
 
@@ -65,14 +67,6 @@ class _WithdrawPageState extends State<WithdrawPage> {
               ],
             ),
 
-            // description
-            BATextField(
-              labelText: 'Description',
-              validate: false,
-              controller: descriptionController,
-              textInputType: TextInputType.text,
-            ),
-
             AppSpacing.large,
 
             // deposit button
@@ -81,10 +75,9 @@ class _WithdrawPageState extends State<WithdrawPage> {
                 enable: amountController.text.isNotEmpty,
                 onPressed: () async {
                   if (formKey.currentState!.validate()) {
-                    final account = widget.userData.accounts.firstWhere(
+                    final account = widget.bankAccounts.firstWhere(
                         (e) => e.accountNumber == accountController.text);
-                    final currentBalance =
-                        double.parse(widget.accountData.amount);
+                    final currentBalance = double.parse(account.amount);
                     final newBalance =
                         currentBalance - double.parse(amountController.text);
 
@@ -99,9 +92,9 @@ class _WithdrawPageState extends State<WithdrawPage> {
                         accountNumber: account.accountNumber,
                         amount: amountController.text,
                         newBalance: newBalance.toStringAsFixed(2),
-                        transactionDescription: descriptionController.text,
                         context: context,
                       );
+                      amountController.clear();
                     }
                   }
                 })

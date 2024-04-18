@@ -44,12 +44,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
     firstNameController.text = userData.firstName;
     lastNameController.text = userData.lastName;
     emailController.text = userData.email;
-    accountTypeController.text = userData.accountType;
 
     // store initial values
     initialFirstName = userData.firstName;
     initialLastName = userData.lastName;
-    initialAccountType = userData.accountType;
 
     addTextControllerListener();
   }
@@ -151,7 +149,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   await updateUserInfo(
                     firstNameController.text,
                     lastNameController.text,
-                    accountTypeController.text,
                     context,
                   );
                   if (mounted) Navigator.of(context).pop(true);

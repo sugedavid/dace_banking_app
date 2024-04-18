@@ -77,7 +77,7 @@ Future<void> logInUser(
 // sign out a user
 Future<void> signOutUser(BuildContext context) async {
   await FirebaseAuth.instance.signOut().then((value) {
-    showToast('Logged out sucessfully.', context);
+    showToast('Logged out sucessfully', context);
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(
           builder: (context) => const LogInPage(),

@@ -1,3 +1,5 @@
+import 'package:banking_app/models/recipient.dart';
+
 class TransactionModel {
   final String transactionId;
   final String transactionType;
@@ -6,6 +8,7 @@ class TransactionModel {
   final String userId;
   final String accountId;
   final String accountNumber;
+  final RecipientModel? recipient;
   final String createdAt;
   final String amount;
 
@@ -17,11 +20,16 @@ class TransactionModel {
     required this.userId,
     required this.accountId,
     required this.accountNumber,
+    this.recipient,
     required this.createdAt,
     required this.amount,
   });
 
   factory TransactionModel.fromMap(Map<String, dynamic> data) {
+    RecipientModel recipient = RecipientModel.toEmpty();
+    if (data['recipient'] != null) {
+      recipient = RecipientModel.fromMap(data['recipient']);
+    }
     return TransactionModel(
       transactionId: data['transactionId'] ?? '',
       transactionType: data['transactionType'] ?? '',
@@ -30,6 +38,7 @@ class TransactionModel {
       userId: data['userId'] ?? '',
       accountId: data['accountId'] ?? '',
       accountNumber: data['accountNumber'] ?? '',
+      recipient: recipient,
       createdAt: data['createdAt'] ?? '',
       amount: data['amount'] ?? '',
     );
@@ -44,6 +53,7 @@ class TransactionModel {
       'userId': userId,
       'accountId': accountId,
       'accountNumber': accountNumber,
+      'recipient': recipient?.toMap(),
       'createdAt': createdAt,
       'amount': amount,
     };
@@ -58,6 +68,7 @@ class TransactionModel {
       userId: '',
       accountId: '',
       accountNumber: '',
+      recipient: RecipientModel.toEmpty(),
       createdAt: '',
       amount: '',
     );

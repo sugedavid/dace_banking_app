@@ -36,14 +36,14 @@ class OnBoardingScaffold extends StatelessWidget {
 
     return Scaffold(
       appBar: null,
-      body: SafeArea(
-        child: Container(
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(AppAssets.backgroundImg),
-              fit: BoxFit.cover,
-            ),
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(AppAssets.backgroundImg),
+            fit: BoxFit.cover,
           ),
+        ),
+        child: SafeArea(
           child: Center(
               child: SingleChildScrollView(
             child: Padding(

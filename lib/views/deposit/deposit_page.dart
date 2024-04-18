@@ -12,11 +12,16 @@ import '../../utils/firebase_utils/account_utils.dart';
 import '../../utils/spacing.dart';
 
 class DepositPage extends StatefulWidget {
-  const DepositPage(
-      {super.key, required this.userData, required this.accountData});
+  const DepositPage({
+    super.key,
+    required this.userData,
+    required this.currentAccount,
+    required this.bankAccounts,
+  });
 
   final UserModel userData;
-  final AccountModel accountData;
+  final AccountModel currentAccount;
+  final List<AccountModel> bankAccounts;
 
   @override
   State<DepositPage> createState() => _DepositPageState();
@@ -41,20 +46,20 @@ class _DepositPageState extends State<DepositPage> {
             // account
             BADropdownButton(
               labelText: 'Account',
-              list:
-                  widget.userData.accounts.map((e) => e.accountNumber).toList(),
+              list: widget.bankAccounts.map((e) => e.accountNumber).toList(),
               controller: accountController,
             ),
 
             // amount
             BATextField(
               labelText: 'Amount',
-              hintText: 'Minimum £5',
+              hintText: 'Minimum £5  - Maximum £5000',
               controller: amountController,
               textInputType: TextInputType.number,
               validator: () {
-                if (double.parse(amountController.text) < 5) {
-                  return 'Minimum £5';
+                if (double.parse(amountController.text) < 5 ||
+                    double.parse(amountController.text) > 5000) {
+                  return 'Minimum £5 - Maximum £5000';
                 }
                 return null;
               },
@@ -79,14 +84,13 @@ class _DepositPageState extends State<DepositPage> {
                 enable: amountController.text.isNotEmpty,
                 onPressed: () async {
                   if (formKey.currentState!.validate()) {
-                    final account = widget.userData.accounts.firstWhere(
+                    final account = widget.bankAccounts.firstWhere(
                         (e) => e.accountNumber == accountController.text);
-                    final currentBalance =
-                        double.parse(widget.accountData.amount);
+                    final currentBalance = double.parse(account.amount);
                     final newBalance =
                         currentBalance + double.parse(amountController.text);
 
-                    await updateAccountBalance(
+                    await depositCash(
                       userId: authUser()?.uid ?? '',
                       accountId: account.accountId,
                       accountNumber: account.accountNumber,
@@ -95,6 +99,9 @@ class _DepositPageState extends State<DepositPage> {
                       transactionDescription: descriptionController.text,
                       context: context,
                     );
+
+                    amountController.clear();
+                    descriptionController.clear();
                   }
                 })
           ],

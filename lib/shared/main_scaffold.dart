@@ -1,3 +1,4 @@
+import 'package:banking_app/models/account.dart';
 import 'package:banking_app/utils/assets.dart';
 import 'package:banking_app/views/transactions/transactions_page.dart';
 import 'package:flutter/material.dart';
@@ -26,14 +27,7 @@ class _MainScaffoldState extends State<MainScaffold> {
     });
   }
 
-  UserModel userData = UserModel(
-    userId: '',
-    firstName: '',
-    lastName: '',
-    email: '',
-    accountType: '',
-    accounts: [],
-  );
+  UserModel userData = UserModel.toEmpty();
 
   bool _isLoading = false;
 
@@ -47,6 +41,8 @@ class _MainScaffoldState extends State<MainScaffold> {
   void fetchUserData() async {
     toggleLoading();
     UserModel fetchedUserData = await authUserInfo(context);
+    List<AccountModel> bankAccounts =
+        await fetchBankAccountsByUserId(fetchedUserData.userId);
     setState(() {
       userData = fetchedUserData;
       _widgetOptions = <Widget>[
@@ -55,6 +51,7 @@ class _MainScaffoldState extends State<MainScaffold> {
         ),
         TransactionsPage(
           userData: userData,
+          bankAccounts: bankAccounts,
         ),
         ProfilePage(
           userData: userData,
