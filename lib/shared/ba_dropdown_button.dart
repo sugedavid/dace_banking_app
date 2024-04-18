@@ -69,11 +69,19 @@ class _BADropdownButtonState extends State<BADropdownButton> {
               icon: const Icon(Icons.keyboard_arrow_down),
               elevation: 16,
               decoration: InputDecoration(
+                filled: true,
+                fillColor: AppColors.backgroundColor,
                 hintText: "Select",
+                hintStyle: const TextStyle(color: Colors.grey),
                 contentPadding: const EdgeInsets.all(12.0),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(4.0),
                   borderSide: const BorderSide(color: Colors.grey),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(
+                      color: Colors.grey), // Change the border color here
+                  borderRadius: BorderRadius.circular(4.0),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(4.0),

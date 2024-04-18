@@ -4,7 +4,7 @@ import 'package:banking_app/utils/firebase_utils/authentication_utils.dart';
 import 'package:flutter/material.dart';
 
 import '../../shared/ba_text_field.dart';
-import '../Registration/registration_page.dart';
+import '../registration/registration_page.dart';
 
 class LogInPage extends StatelessWidget {
   const LogInPage({super.key});
@@ -35,6 +35,7 @@ class LogInPage extends StatelessWidget {
               controller: passwordController,
               obscureText: true,
               validate: false,
+              showOptional: false,
             ),
 
             const SizedBox(

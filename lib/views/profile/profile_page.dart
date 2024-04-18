@@ -43,8 +43,7 @@ class ProfilePageState extends State<ProfilePage> {
                 // profile
                 ListTile(
                   leading: const Icon(Icons.person_outline),
-                  title: const Text('Name'),
-                  subtitle: Text(
+                  title: Text(
                       '${widget.userData.firstName} ${widget.userData.lastName}'),
                 ),
                 const BADivider(indent: 56),
@@ -52,8 +51,7 @@ class ProfilePageState extends State<ProfilePage> {
                 // email
                 ListTile(
                   leading: const Icon(Icons.email_outlined),
-                  title: const Text('Email'),
-                  subtitle: Text(widget.userData.email),
+                  title: Text(widget.userData.email),
                 ),
                 const BADivider(indent: 56),
 
@@ -67,11 +65,10 @@ class ProfilePageState extends State<ProfilePage> {
                 // const BADivider(),
 
                 // account type
-                ListTile(
-                  leading: const Icon(Icons.price_change_outlined),
-                  title: const Text('Account Type'),
-                  subtitle: Text(widget.userData.accountType),
-                ),
+                // ListTile(
+                //   leading: const Icon(Icons.account_balance_outlined),
+                //   title: Text(widget.userData.accountType),
+                // ),
                 const BADivider(indent: 56),
 
                 // reset email

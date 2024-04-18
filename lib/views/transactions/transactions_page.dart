@@ -1,3 +1,4 @@
+import 'package:banking_app/models/account.dart';
 import 'package:banking_app/models/user.dart';
 import 'package:banking_app/shared/ba_divider.dart';
 import 'package:banking_app/utils/date.dart';
@@ -7,16 +8,50 @@ import 'package:flutter/material.dart';
 import '../../models/transaction.dart';
 
 class TransactionsPage extends StatelessWidget {
-  const TransactionsPage({super.key, required this.userData});
+  const TransactionsPage(
+      {super.key, required this.userData, required this.bankAccounts});
 
   final UserModel userData;
+  final List<AccountModel> bankAccounts;
+
+  Widget trailingIcon(type) {
+    switch (type) {
+      case 'Deposit':
+        return const Icon(
+          Icons.upload_outlined,
+          size: 20.0,
+          color: Colors.green,
+        );
+
+      case 'Withdrawal':
+        return const Icon(
+          Icons.download_outlined,
+          size: 20.0,
+          color: Colors.redAccent,
+        );
+
+      case 'Transfer':
+        return const Icon(
+          Icons.swap_horiz_outlined,
+          size: 20.0,
+          color: Colors.blue,
+        );
+
+      default:
+        return const Icon(
+          Icons.image_not_supported_outlined,
+          size: 32.0,
+          color: Colors.blue,
+        );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
         future: fetchTransactions(
             userId: userData.userId,
-            accountId: userData.accounts[0].accountId,
+            accountId: bankAccounts[0].accountId,
             context: context),
         builder: (context, snapshot) {
           // loading state
@@ -65,6 +100,7 @@ class TransactionsPage extends StatelessWidget {
                             : '-£${transaction.amount}';
 
                         return ListTile(
+                          leading: trailingIcon(transactionType),
                           title: Text(
                             transaction.transactionType,
                             style: const TextStyle(fontWeight: FontWeight.w500),
