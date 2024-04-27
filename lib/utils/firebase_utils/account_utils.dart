@@ -1,4 +1,6 @@
 // update account balance
+import 'dart:math';
+
 import 'package:banking_app/models/account.dart';
 import 'package:banking_app/models/recipient.dart';
 import 'package:banking_app/shared/main_scaffold.dart';
@@ -33,8 +35,9 @@ Future<void> depositCash(
       var transaction = TransactionModel(
         transactionId: transactionRef.id,
         transactionType: 'Deposit',
-        transactionStatus: 'completed',
+        transactionStatus: 'Completed',
         transactionDescription: transactionDescription,
+        transactionRef: generateTransactionReceipt('DEP'),
         userId: userId,
         accountId: accountId,
         accountNumber: accountNumber,
@@ -82,7 +85,8 @@ Future<void> withdrawCash(
       var transaction = TransactionModel(
         transactionId: transactionRef.id,
         transactionType: 'Withdrawal',
-        transactionStatus: 'completed',
+        transactionStatus: 'Completed',
+        transactionRef: generateTransactionReceipt('WITH'),
         userId: userId,
         accountId: accountId,
         accountNumber: accountNumber,
@@ -132,7 +136,8 @@ Future<void> transferCash(
     // exit fun if account isn't found
     if (recipientAccount.accountId.isEmpty) return;
 
-    var newReceipientBalance = recipientAccount.amount + amount;
+    var newReceipientBalance =
+        double.parse(recipientAccount.amount) + double.parse(amount);
 
     // update sender's account
     await dbInstance.collection('bankAccounts').doc(accountId).update({
@@ -144,7 +149,7 @@ Future<void> transferCash(
           .collection('bankAccounts')
           .doc(recipientAccount.accountId)
           .update({
-        'amount': newReceipientBalance,
+        'amount': newReceipientBalance.toStringAsFixed(2),
         'updatedAt': createdAt,
       }).then((value) async {
         // generate transaction
@@ -154,7 +159,8 @@ Future<void> transferCash(
         var transaction = TransactionModel(
           transactionId: transactionRef.id,
           transactionType: 'Transfer',
-          transactionStatus: 'completed',
+          transactionStatus: 'Completed',
+          transactionRef: generateTransactionReceipt('TRA'),
           userId: userId,
           accountId: accountId,
           accountNumber: accountNumber,
@@ -235,4 +241,14 @@ Future<void> generateTransaction(
     // error generating transaction
     showToast('Error generating transaction: $error', context);
   }
+}
+
+// generate transaction ref
+String generateTransactionReceipt(String transactionType) {
+  String randomString = "";
+  const String chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+  for (int i = 0; i < 10; i++) {
+    randomString += chars[Random().nextInt(chars.length)];
+  }
+  return '$transactionType-$randomString';
 }

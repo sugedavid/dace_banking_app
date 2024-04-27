@@ -80,7 +80,7 @@ class _TransferPageState extends State<TransferPage> {
               hintText: '##-##-##',
               validate: true,
               controller: sortCodeController,
-              textInputType: TextInputType.text,
+              textInputType: TextInputType.number,
               inputFormatters: [
                 FilteringTextInputFormatter.digitsOnly,
                 LengthLimitingTextInputFormatter(6),
@@ -175,14 +175,15 @@ class _TransferPageState extends State<TransferPage> {
                   if (formKey.currentState!.validate()) {
                     final currentBalance =
                         double.parse(widget.currentAccount.amount);
-                    final newBalance =
-                        currentBalance - double.parse(amountController.text);
+                    final amountToSubtract =
+                        double.parse(amountController.text);
+                    final newBalance = currentBalance - amountToSubtract;
 
                     await transferCash(
                       userId: authUser()?.uid ?? '',
                       accountId: widget.currentAccount.accountId,
                       accountNumber: widget.currentAccount.accountNumber,
-                      amount: amountController.text,
+                      amount: amountToSubtract.toStringAsFixed(0),
                       newBalance: newBalance.toStringAsFixed(2),
                       recipientsortCode: sortCodeController.text,
                       recipientAccountNumber: recipientAccountController.text,

@@ -56,12 +56,12 @@ class _HomePageState extends State<HomePage> {
               // success state
               else {
                 bankAccounts = snapshot.data as List<AccountModel>;
-                accountData = bankAccounts[0];
+                if (bankAccounts.isNotEmpty) accountData = bankAccounts[0];
                 return Column(
                   children: [
                     // Account balance
                     AccountCard(
-                      accountData: bankAccounts[0],
+                      accountData: accountData,
                       isLoading: false,
                     ),
 
@@ -78,10 +78,17 @@ class _HomePageState extends State<HomePage> {
                       children: <Widget>[
                         // deposit
                         ServiceCard(
-                          icon: const Icon(
-                            Icons.upload_outlined,
-                            size: 32.0,
-                            color: Colors.green,
+                          icon: Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.green.withOpacity(0.1),
+                            ),
+                            padding: const EdgeInsets.all(8.0),
+                            child: const Icon(
+                              Icons.upload_outlined,
+                              size: 32.0,
+                              color: Colors.green,
+                            ),
                           ),
                           title: 'Deposit',
                           onPressed: () => Navigator.of(context)
@@ -104,10 +111,17 @@ class _HomePageState extends State<HomePage> {
 
                         // withdraw
                         ServiceCard(
-                          icon: const Icon(
-                            Icons.download_outlined,
-                            size: 32.0,
-                            color: Colors.redAccent,
+                          icon: Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.red.withOpacity(0.1),
+                            ),
+                            padding: const EdgeInsets.all(8.0),
+                            child: const Icon(
+                              Icons.download_outlined,
+                              size: 32.0,
+                              color: Colors.redAccent,
+                            ),
                           ),
                           title: 'Withdraw',
                           onPressed: () => Navigator.of(context)
@@ -131,10 +145,17 @@ class _HomePageState extends State<HomePage> {
 
                         // transfer
                         ServiceCard(
-                          icon: const Icon(
-                            Icons.swap_horiz_outlined,
-                            size: 32.0,
-                            color: Colors.blue,
+                          icon: Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.blue.withOpacity(0.1),
+                            ),
+                            padding: const EdgeInsets.all(8.0),
+                            child: const Icon(
+                              Icons.swap_horiz_outlined,
+                              size: 32.0,
+                              color: Colors.blue,
+                            ),
                           ),
                           title: 'Transfer',
                           onPressed: () => Navigator.of(context)
@@ -158,10 +179,17 @@ class _HomePageState extends State<HomePage> {
 
                         // accounts
                         ServiceCard(
-                          icon: const Icon(
-                            Icons.account_balance_outlined,
-                            size: 32.0,
-                            color: Colors.orange,
+                          icon: Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.orange.withOpacity(0.1),
+                            ),
+                            padding: const EdgeInsets.all(8.0),
+                            child: const Icon(
+                              Icons.account_balance_outlined,
+                              size: 32.0,
+                              color: Colors.orange,
+                            ),
                           ),
                           title: 'My Accounts',
                           onPressed: () => Navigator.of(context).push(
@@ -176,10 +204,17 @@ class _HomePageState extends State<HomePage> {
 
                         // checkbook
                         ServiceCard(
-                          icon: const Icon(
-                            Icons.book_outlined,
-                            size: 32.0,
-                            color: Colors.purple,
+                          icon: Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.purple.withOpacity(0.1),
+                            ),
+                            padding: const EdgeInsets.all(8.0),
+                            child: const Icon(
+                              Icons.book_outlined,
+                              size: 32.0,
+                              color: Colors.purple,
+                            ),
                           ),
                           title: 'Checkbooks',
                           onPressed: () => {},
@@ -187,10 +222,17 @@ class _HomePageState extends State<HomePage> {
 
                         // debit card
                         ServiceCard(
-                          icon: const Icon(
-                            Icons.credit_card_outlined,
-                            size: 32.0,
-                            color: Colors.blueGrey,
+                          icon: Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.blueGrey.withOpacity(0.1),
+                            ),
+                            padding: const EdgeInsets.all(8.0),
+                            child: const Icon(
+                              Icons.credit_card_outlined,
+                              size: 32.0,
+                              color: Colors.blueGrey,
+                            ),
                           ),
                           title: 'Debit/ Credit Cards',
                           onPressed: () {},
@@ -198,10 +240,17 @@ class _HomePageState extends State<HomePage> {
 
                         // recurring payment
                         ServiceCard(
-                          icon: const Icon(
-                            Icons.replay_outlined,
-                            size: 32.0,
-                            color: Colors.teal,
+                          icon: Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.teal.withOpacity(0.1),
+                            ),
+                            padding: const EdgeInsets.all(8.0),
+                            child: const Icon(
+                              Icons.replay_outlined,
+                              size: 32.0,
+                              color: Colors.teal,
+                            ),
                           ),
                           title: 'Recurring Payments',
                           onPressed: () {},

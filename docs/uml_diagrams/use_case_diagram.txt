@@ -1,0 +1,46 @@
+@startuml
+left to right direction
+actor Customer as c
+actor Bank as b
+
+rectangle DACE_BANKING_APP {
+ usecase "Account Management" as AM
+ usecase "Create Account" as CA
+ usecase "Edit Account Details" as ED
+ usecase "Close Account" as CLA
+
+ usecase "Financial Transactions" as FT
+ usecase "Deposit" as DP
+ usecase "Withdraw Cash" as WC
+ usecase "Transfer Funds" as TF
+ usecase "Transaction History" as TH
+
+ usecase "Account Services" as AS
+ usecase "Security and Compliance" as SC
+ usecase "Customer Support and Maintenance" as CS
+ usecase "Investment and Loan Services" as IL
+ usecase "AI-Powered Financial Advice" as AI
+}
+
+c --> AM
+c --> FT
+c --> AS
+c --> IL
+c --> CS
+c --> AI
+
+AM .> SC : include
+AM .> CA : include
+AM .> ED : include
+AM .> CLA : include
+
+FT .> DP : include
+FT .> WC : include
+FT .> TF : include
+FT .> TH : include
+
+FT <-- b
+IL <-- b
+CS <-- b
+
+@enduml

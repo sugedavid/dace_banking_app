@@ -1,0 +1,20 @@
+@startuml
+
+[User Account] as UA
+
+[Firebase Database] as FDB
+
+[Transaction] as TS
+
+Deposit - TS
+TS -down- Withdrawal
+TS -up- Transfer
+
+TS ..> FDB : use
+UA - "Account Details"
+TS ..> UA : depends
+UA ..> FDB : use
+
+"Data Access" - FDB
+
+@enduml

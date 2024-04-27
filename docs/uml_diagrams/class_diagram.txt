@@ -1,0 +1,51 @@
+@startuml
+class User {
+  userId
+  firstName
+  lastName
+  email
+  accountType
+  -createUser()
+  -signIn()
+  +userInfo()
+}
+
+class AccountDetails {
+  accountId
+  accountNumber
+  accountType
+  amount
+  createdAt
+  updatedAt
+  userId
+  -createAccount()
+  +accountInfo()
+}
+
+class Transaction {
+  transactionId
+  accountId
+  accountNumber
+  amount
+  createdAt
+  description
+  status
+  type
+  userId
+  -withdraw()
+  -deposit()
+  +transactionHistory()
+}
+
+class Transfer {
+   from
+   to
+   -transfer()
+}
+
+Transaction <|-- Transfer
+User --* AccountDetails : use
+
+User "1..*" -- "1..*" Transaction
+
+@enduml
