@@ -5,6 +5,7 @@ class TransactionModel {
   final String transactionType;
   final String transactionStatus;
   final String? transactionDescription;
+  final String transactionRef;
   final String userId;
   final String accountId;
   final String accountNumber;
@@ -17,6 +18,7 @@ class TransactionModel {
     required this.transactionType,
     required this.transactionStatus,
     this.transactionDescription,
+    required this.transactionRef,
     required this.userId,
     required this.accountId,
     required this.accountNumber,
@@ -35,6 +37,7 @@ class TransactionModel {
       transactionType: data['transactionType'] ?? '',
       transactionStatus: data['transactionStatus'] ?? '',
       transactionDescription: data['transactionDescription'] ?? '',
+      transactionRef: data['transactionRef'] ?? '',
       userId: data['userId'] ?? '',
       accountId: data['accountId'] ?? '',
       accountNumber: data['accountNumber'] ?? '',
@@ -50,6 +53,7 @@ class TransactionModel {
       'transactionType': transactionType,
       'transactionStatus': transactionStatus,
       'transactionDescription': transactionDescription,
+      'transactionRef': transactionRef,
       'userId': userId,
       'accountId': accountId,
       'accountNumber': accountNumber,
@@ -65,6 +69,8 @@ class TransactionModel {
       transactionId: '',
       transactionType: '',
       transactionStatus: '',
+      transactionDescription: '',
+      transactionRef: '',
       userId: '',
       accountId: '',
       accountNumber: '',

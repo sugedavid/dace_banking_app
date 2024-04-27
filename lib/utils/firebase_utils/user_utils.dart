@@ -55,6 +55,7 @@ Future<void> updateUser(UserCredential credential, String firstName,
         lastName: lastName,
         email: credential.user?.email,
         userId: credential.user?.uid ?? '',
+        bankName: 'DACE',
       );
 
       // add a new document to the accounts subcollection
@@ -256,5 +257,38 @@ Future<void> resetPassword(String email, BuildContext context) async {
   } catch (error) {
     // error sending password reset email
     showToast('Error sending password reset email: $error', context);
+  }
+}
+
+// fetch user details by id
+Future<UserModel> getUserById(String userId, BuildContext context) async {
+  UserModel data = UserModel(
+    userId: '',
+    firstName: '',
+    lastName: '',
+    email: '',
+  );
+  try {
+    DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .withConverter(
+          fromFirestore: UserModel.fromFirestore,
+          toFirestore: (UserModel user, _) => user.toFirestore(),
+        )
+        .get();
+
+    if (documentSnapshot.exists) {
+      // user document found
+      data = documentSnapshot.data() as UserModel;
+      return data;
+    } else {
+      // user document does not exist
+      return data;
+    }
+  } catch (error) {
+    // error fetching user information
+    showToast('Error getting your information: $error', context);
+    return data;
   }
 }

@@ -3,6 +3,7 @@ import 'package:banking_app/models/user.dart';
 import 'package:banking_app/shared/ba_divider.dart';
 import 'package:banking_app/utils/date.dart';
 import 'package:banking_app/utils/firebase_utils/transaction_utils.dart';
+import 'package:banking_app/views/transactions/transaction_detail_page.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/transaction.dart';
@@ -17,31 +18,59 @@ class TransactionsPage extends StatelessWidget {
   Widget trailingIcon(type) {
     switch (type) {
       case 'Deposit':
-        return const Icon(
-          Icons.upload_outlined,
-          size: 20.0,
-          color: Colors.green,
+        return Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Colors.green.withOpacity(0.1),
+          ),
+          padding: const EdgeInsets.all(8.0),
+          child: const Icon(
+            Icons.upload_outlined,
+            size: 20.0,
+            color: Colors.green,
+          ),
         );
 
       case 'Withdrawal':
-        return const Icon(
-          Icons.download_outlined,
-          size: 20.0,
-          color: Colors.redAccent,
+        return Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Colors.redAccent.withOpacity(0.1),
+          ),
+          padding: const EdgeInsets.all(8.0),
+          child: const Icon(
+            Icons.download_outlined,
+            size: 20.0,
+            color: Colors.redAccent,
+          ),
         );
 
-      case 'Transfer':
-        return const Icon(
-          Icons.swap_horiz_outlined,
-          size: 20.0,
-          color: Colors.blue,
+      case 'Transfer' || 'Received':
+        return Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Colors.blue.withOpacity(0.1),
+          ),
+          padding: const EdgeInsets.all(8.0),
+          child: const Icon(
+            Icons.swap_horiz_outlined,
+            size: 20.0,
+            color: Colors.blue,
+          ),
         );
 
       default:
-        return const Icon(
-          Icons.image_not_supported_outlined,
-          size: 32.0,
-          color: Colors.blue,
+        return Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Colors.blue.withOpacity(0.1),
+          ),
+          padding: const EdgeInsets.all(8.0),
+          child: const Icon(
+            Icons.image_not_supported_outlined,
+            size: 32.0,
+            color: Colors.blue,
+          ),
         );
     }
   }
@@ -95,28 +124,47 @@ class TransactionsPage extends StatelessWidget {
                         final transaction =
                             snapshot.data?[index] as TransactionModel;
                         final transactionType = transaction.transactionType;
-                        final transactionAmount = transactionType == 'Deposit'
+                        final transactionAmount = transactionType ==
+                                    'Deposit' ||
+                                (transaction.transactionType == 'Transfer' &&
+                                    transaction.recipient?.userId ==
+                                        userData.userId)
                             ? '+£${transaction.amount}'
                             : '-£${transaction.amount}';
 
                         return ListTile(
                           leading: trailingIcon(transactionType),
                           title: Text(
-                            transaction.transactionType,
+                            transactionType,
                             style: const TextStyle(fontWeight: FontWeight.w500),
                           ),
                           subtitle: Text(
                             formatDateString(transaction.createdAt),
                             style: const TextStyle(
-                                fontSize: 13, fontWeight: FontWeight.w400),
+                                color: Colors.blueGrey,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w400),
                           ),
                           trailing: Text(
                             transactionAmount,
                             style: TextStyle(
-                                fontSize: 16,
-                                color: transaction.transactionType == 'Deposit'
-                                    ? Colors.green
-                                    : Colors.redAccent),
+                              fontSize: 16,
+                              color: transaction.transactionType == 'Deposit' ||
+                                      (transaction.transactionType ==
+                                              'Transfer' &&
+                                          transaction.recipient?.userId ==
+                                              userData.userId)
+                                  ? Colors.green
+                                  : Colors.redAccent,
+                            ),
+                          ),
+                          onTap: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => TransactionDetailPage(
+                                transaction: transaction,
+                                user: userData,
+                              ),
+                            ),
                           ),
                         );
                       },
