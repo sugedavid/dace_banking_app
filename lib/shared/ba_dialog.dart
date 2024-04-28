@@ -4,7 +4,7 @@ class BaDialog {
   static Future<bool> showBaDialog({
     required BuildContext context,
     required String title,
-    required String description,
+    required Widget content,
     String? cancelText,
     String? okText,
     Function()? onCancel,
@@ -14,7 +14,7 @@ class BaDialog {
       context: context,
       builder: (context) => AlertDialog(
         title: Text(title),
-        content: Text(description),
+        content: content,
         actions: [
           if (onCancel != null)
             TextButton(

@@ -20,6 +20,7 @@ class BATextField extends StatelessWidget {
     this.readOnly = false,
     this.validator,
     this.inputFormatters,
+    this.focusNode,
   });
 
   final String labelText;
@@ -33,6 +34,7 @@ class BATextField extends StatelessWidget {
   final bool? readOnly;
   final Function()? validator;
   final List<TextInputFormatter>? inputFormatters;
+  final FocusNode? focusNode;
 
   String? Function(String?)? _validator() {
     // email validation
@@ -67,6 +69,17 @@ class BATextField extends StatelessWidget {
           return 'Please enter your password';
         } else if (validate! && value.length < 8) {
           return 'Password must be at least 8 characters long';
+        }
+        return null;
+      };
+    }
+    // phone validation
+    else if (textInputType == TextInputType.phone) {
+      return (value) {
+        if (value == null || value.isEmpty) {
+          return 'Please enter your phone number';
+        } else if (validate! && value.length < 10) {
+          return 'Phone must be at least 10 digits long';
         }
         return null;
       };
@@ -130,6 +143,7 @@ class BATextField extends StatelessWidget {
             obscureText: obscureText!,
             controller: controller,
             keyboardType: textInputType,
+            focusNode: focusNode,
             decoration: InputDecoration(
               filled: true,
               fillColor: AppColors.backgroundColor,
@@ -142,13 +156,22 @@ class BATextField extends StatelessWidget {
               ),
               enabledBorder: OutlineInputBorder(
                 borderSide: const BorderSide(
-                    color: Colors.grey), // Change the border color here
+                  color: AppColors.backgroundColor,
+                ), // Change the border color here
+                borderRadius: BorderRadius.circular(4.0),
+              ),
+              disabledBorder: OutlineInputBorder(
+                borderSide: const BorderSide(
+                  color: AppColors.backgroundColor,
+                ), // Change the border color here
                 borderRadius: BorderRadius.circular(4.0),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(4.0),
                 borderSide: BorderSide(
-                  color: readOnly! ? Colors.grey : AppColors.primaryColor,
+                  color: readOnly!
+                      ? AppColors.backgroundColor
+                      : AppColors.primaryColor,
                 ), // Set focused border color to transparent
               ),
             ),

@@ -50,7 +50,7 @@ Future<void> depositCash(
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => const SuccessPage(
-              message: 'Amount deposited sucessfully',
+              message: 'Amount deposited successfully',
               secondaryBtnTxt: 'Make another transaction',
             ),
           ),
@@ -99,7 +99,7 @@ Future<void> withdrawCash(
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => const SuccessPage(
-              message: 'Amount withdrawn sucessfully',
+              message: 'Amount withdrawn successfully',
               secondaryBtnTxt: 'Make another transaction',
             ),
           ),
@@ -182,7 +182,7 @@ Future<void> transferCash(
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => const SuccessPage(
-                message: 'Amount transfered sucessfully',
+                message: 'Amount transfered successfully',
                 secondaryBtnTxt: 'Make another transaction',
               ),
             ),
@@ -230,7 +230,7 @@ Future<void> generateTransaction(
   try {
     var transactionRef = dbInstance.collection('transactions');
     await transactionRef.add(transaction.toMap()).then((value) {
-      showToast('Transaction generated sucessfully!', context);
+      showToast('Transaction generated successfully!', context);
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
             builder: (context) => const MainScaffold(),

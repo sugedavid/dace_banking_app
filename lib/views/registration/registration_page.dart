@@ -16,6 +16,7 @@ class ResgistrationPage extends StatelessWidget {
     final firstNameController = TextEditingController();
     final lastNameController = TextEditingController();
     final emailController = TextEditingController();
+    final phoneController = TextEditingController();
     final passwordController = TextEditingController();
     final accountTypeController = TextEditingController();
 
@@ -55,6 +56,14 @@ class ResgistrationPage extends StatelessWidget {
               textInputType: TextInputType.emailAddress,
             ),
 
+            //  phone
+            BATextField(
+              labelText: 'Phone',
+              hintText: 'Enter phone e.g +44123456789',
+              controller: phoneController,
+              textInputType: TextInputType.phone,
+            ),
+
             // password
             BATextField(
               labelText: 'Password',
@@ -85,6 +94,7 @@ class ResgistrationPage extends StatelessWidget {
                     emailController.text,
                     passwordController.text,
                     accountTypeController.text,
+                    phoneController.text,
                     context,
                   );
                 }

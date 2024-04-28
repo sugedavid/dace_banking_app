@@ -38,7 +38,7 @@ class _AccountsPageState extends State<AccountsPage> {
   @override
   Widget build(BuildContext context) {
     return SinglePageScaffold(
-      title: 'My Accounts',
+      title: 'My Account',
       child: ListView.separated(
         shrinkWrap: true,
         itemCount: widget.bankAccounts.length,

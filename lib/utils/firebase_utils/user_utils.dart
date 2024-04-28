@@ -1,7 +1,9 @@
 import 'dart:math';
 
 import 'package:banking_app/models/user.dart';
+import 'package:banking_app/utils/firebase_utils/authentication_utils.dart';
 import 'package:banking_app/views/login/login_page.dart';
+import 'package:banking_app/views/phone_enrollment/phone_enrollment_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -9,14 +11,18 @@ import 'package:intl/intl.dart';
 
 import '../../models/account.dart';
 import '../../shared/ba_toast_notification.dart';
-import '../../views/sucess/sucess_page.dart';
 
 // db reference
 final dbInstance = FirebaseFirestore.instance;
 
 // update user
-Future<void> updateUser(UserCredential credential, String firstName,
-    String lastName, String accountType, BuildContext context) async {
+Future<void> updateUser(
+    UserCredential credential,
+    String firstName,
+    String lastName,
+    String accountType,
+    String phoneNumber,
+    BuildContext context) async {
   try {
     String accountNumber = await generateUniqueAccountNumber();
     String sortCode = await generateSortCode();
@@ -26,6 +32,9 @@ Future<void> updateUser(UserCredential credential, String firstName,
       firstName: firstName,
       lastName: lastName,
       email: credential.user?.email ?? '',
+      phoneNumber: phoneNumber,
+      emailVerified: credential.user?.emailVerified ?? false,
+      phoneEnrolled: false,
     );
 
     // reference to the Firestore collection
@@ -60,13 +69,17 @@ Future<void> updateUser(UserCredential credential, String firstName,
 
       // add a new document to the accounts subcollection
       bankAccountsCollectionRef.set(account.toMap()).then((value) {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => const SuccessPage(
-              message: 'Account created sucessfully',
-            ),
-          ),
-        );
+        // verify email
+        if (context.mounted) {
+          verifyUserEmail(context);
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                builder: (context) => PhoneEnrollmentPage(
+                  userModel: user,
+                ),
+              ),
+              (route) => false);
+        }
       });
     });
   } catch (error) {
@@ -123,19 +136,17 @@ Future<String> generateSortCode() async {
 
 // authenticated user
 User? authUser() {
-  return FirebaseAuth.instance.currentUser;
+  User? user = FirebaseAuth.instance.currentUser;
+  user?.reload();
+
+  return user;
 }
 
 // user information
 Future<UserModel> authUserInfo(BuildContext context) async {
   var user = authUser();
   if (user != null) {
-    UserModel data = UserModel(
-      userId: '',
-      firstName: '',
-      lastName: '',
-      email: '',
-    );
+    UserModel data = UserModel.toEmpty();
     try {
       DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
           .collection('users')
@@ -161,7 +172,6 @@ Future<UserModel> authUserInfo(BuildContext context) async {
     }
   } else {
     // user is not authenticated
-    showToast('You are not authenticated', context);
     return UserModel.toEmpty();
   }
 }
@@ -179,7 +189,7 @@ Future<void> updateUserInfo(
         'firstName': firstName,
         'lastName': lastName,
       }).then((value) {
-        showToast('Profile updated sucessfully!', context);
+        showToast('Profile updated successfully!', context);
       });
     } catch (error) {
       // error updating user profile
@@ -231,7 +241,7 @@ Future<void> closeUserAccount(BuildContext context) async {
       });
 
       if (context.mounted) {
-        showToast('Account closed sucessfully!', context);
+        showToast('Account closed successfully!', context);
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (context) => const LogInPage(),
@@ -262,12 +272,7 @@ Future<void> resetPassword(String email, BuildContext context) async {
 
 // fetch user details by id
 Future<UserModel> getUserById(String userId, BuildContext context) async {
-  UserModel data = UserModel(
-    userId: '',
-    firstName: '',
-    lastName: '',
-    email: '',
-  );
+  UserModel data = UserModel.toEmpty();
   try {
     DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
         .collection('users')
