@@ -83,7 +83,7 @@ class _HomePageState extends State<HomePage> {
                               shape: BoxShape.circle,
                               color: Colors.green.withOpacity(0.1),
                             ),
-                            padding: const EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.all(10.0),
                             child: const Icon(
                               Icons.upload_outlined,
                               size: 32.0,
@@ -116,7 +116,7 @@ class _HomePageState extends State<HomePage> {
                               shape: BoxShape.circle,
                               color: Colors.red.withOpacity(0.1),
                             ),
-                            padding: const EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.all(10.0),
                             child: const Icon(
                               Icons.download_outlined,
                               size: 32.0,
@@ -150,7 +150,7 @@ class _HomePageState extends State<HomePage> {
                               shape: BoxShape.circle,
                               color: Colors.blue.withOpacity(0.1),
                             ),
-                            padding: const EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.all(10.0),
                             child: const Icon(
                               Icons.swap_horiz_outlined,
                               size: 32.0,
@@ -184,14 +184,14 @@ class _HomePageState extends State<HomePage> {
                               shape: BoxShape.circle,
                               color: Colors.orange.withOpacity(0.1),
                             ),
-                            padding: const EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.all(10.0),
                             child: const Icon(
                               Icons.account_balance_outlined,
                               size: 32.0,
                               color: Colors.orange,
                             ),
                           ),
-                          title: 'My Accounts',
+                          title: 'My Account',
                           onPressed: () => Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) => AccountsPage(
@@ -209,7 +209,7 @@ class _HomePageState extends State<HomePage> {
                               shape: BoxShape.circle,
                               color: Colors.purple.withOpacity(0.1),
                             ),
-                            padding: const EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.all(10.0),
                             child: const Icon(
                               Icons.book_outlined,
                               size: 32.0,
@@ -227,7 +227,7 @@ class _HomePageState extends State<HomePage> {
                               shape: BoxShape.circle,
                               color: Colors.blueGrey.withOpacity(0.1),
                             ),
-                            padding: const EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.all(10.0),
                             child: const Icon(
                               Icons.credit_card_outlined,
                               size: 32.0,
@@ -245,7 +245,7 @@ class _HomePageState extends State<HomePage> {
                               shape: BoxShape.circle,
                               color: Colors.teal.withOpacity(0.1),
                             ),
-                            padding: const EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.all(10.0),
                             child: const Icon(
                               Icons.replay_outlined,
                               size: 32.0,

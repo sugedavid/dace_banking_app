@@ -1,15 +1,21 @@
-import 'package:banking_app/shared/main_scaffold.dart';
 import 'package:banking_app/utils/assets.dart';
 import 'package:banking_app/utils/spacing.dart';
 import 'package:flutter/material.dart';
 
 import '../../shared/ba_primary_button.dart';
+import '../../shared/main_scaffold.dart';
 import '../../utils/colors.dart';
 
 class SuccessPage extends StatefulWidget {
   final String message;
   final String? secondaryBtnTxt;
-  const SuccessPage({super.key, required this.message, this.secondaryBtnTxt});
+  final Function()? secondaryBtnCallback;
+  const SuccessPage({
+    super.key,
+    required this.message,
+    this.secondaryBtnTxt,
+    this.secondaryBtnCallback,
+  });
 
   @override
   SuccessPageState createState() => SuccessPageState();
@@ -62,30 +68,33 @@ class SuccessPageState extends State<SuccessPage>
 
                 // title
                 const Text(
-                  'Success!',
+                  'Success',
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                 ),
 
                 // message
                 Text(
                   widget.message,
-                  style: const TextStyle(fontSize: 16),
+                  style: const TextStyle(fontSize: 14, color: Colors.blueGrey),
                 ),
                 AppSpacing.large,
 
                 // continue
                 BAPrimaryButton(
                     text: 'Continue',
-                    onPressed: () => Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(
-                          builder: (context) => const MainScaffold(),
-                        ),
-                        (route) => false)),
+                    onPressed: () async =>
+                        Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                              builder: (context) => const MainScaffold(),
+                            ),
+                            (route) => false)),
 
                 // another
                 if (widget.secondaryBtnTxt != null)
                   TextButton(
-                    onPressed: () => Navigator.of(context).pop(),
+                    onPressed: () => widget.secondaryBtnCallback != null
+                        ? widget.secondaryBtnCallback!()
+                        : Navigator.of(context).pop(),
                     child: Text(widget.secondaryBtnTxt!),
                   ),
               ],

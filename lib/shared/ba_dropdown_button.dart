@@ -76,11 +76,13 @@ class _BADropdownButtonState extends State<BADropdownButton> {
                 contentPadding: const EdgeInsets.all(12.0),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(4.0),
-                  borderSide: const BorderSide(color: Colors.grey),
+                  borderSide:
+                      const BorderSide(color: AppColors.backgroundColor),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderSide: const BorderSide(
-                      color: Colors.grey), // Change the border color here
+                      color: AppColors
+                          .backgroundColor), // Change the border color here
                   borderRadius: BorderRadius.circular(4.0),
                 ),
                 focusedBorder: OutlineInputBorder(
