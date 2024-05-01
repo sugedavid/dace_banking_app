@@ -13,6 +13,7 @@ class AccountModel {
   final String lastName;
   final String? email;
   final String userId;
+  final String bankName;
 
   AccountModel({
     required this.accountId,
@@ -27,6 +28,7 @@ class AccountModel {
     required this.lastName,
     required this.userId,
     this.email,
+    required this.bankName,
   });
 
   factory AccountModel.fromDocument(DocumentSnapshot document) {
@@ -43,6 +45,7 @@ class AccountModel {
       lastName: document['lastName'] ?? '',
       email: document['email'] ?? '',
       userId: document['userId'] ?? '',
+      bankName: document['bankName'] ?? '',
     );
   }
 
@@ -60,6 +63,7 @@ class AccountModel {
       lastName: data['lastName'] ?? '',
       email: data['email'] ?? '',
       userId: data['userId'] ?? '',
+      bankName: data['bankName'] ?? '',
     );
   }
 
@@ -77,6 +81,7 @@ class AccountModel {
       'lastName': lastName,
       'email': email,
       'userId': userId,
+      'bankName': bankName,
     };
   }
 
@@ -95,6 +100,7 @@ class AccountModel {
       lastName: '',
       email: '',
       userId: '',
+      bankName: '',
     );
   }
 }

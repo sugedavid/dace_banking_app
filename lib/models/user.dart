@@ -5,12 +5,18 @@ class UserModel {
   final String firstName;
   final String lastName;
   final String email;
+  final String phoneNumber;
+  final bool emailVerified;
+  final bool phoneEnrolled;
 
   UserModel({
     required this.userId,
     required this.firstName,
     required this.lastName,
     required this.email,
+    required this.phoneNumber,
+    required this.emailVerified,
+    required this.phoneEnrolled,
   });
 
   factory UserModel.fromFirestore(
@@ -24,6 +30,9 @@ class UserModel {
       firstName: data?['firstName'] ?? '',
       lastName: data?['lastName'] ?? '',
       email: data?['email'] ?? '',
+      phoneNumber: data?['phoneNumber'] ?? '',
+      emailVerified: data?['emailVerified'] ?? false,
+      phoneEnrolled: data?['phoneEnrolled'] ?? false,
     );
   }
 
@@ -33,6 +42,9 @@ class UserModel {
       'firstName': firstName,
       'lastName': lastName,
       'email': email,
+      'phoneNumber': phoneNumber,
+      'emailVerified': emailVerified,
+      'phoneEnrolled': phoneEnrolled,
     };
   }
 
@@ -42,12 +54,18 @@ class UserModel {
     String? lastName,
     String? email,
     String? accountType,
+    String? phoneNumber,
+    bool? emailVerified,
+    bool? phoneEnrolled,
   }) {
     return UserModel(
       userId: userId ?? this.userId,
       firstName: firstName ?? this.firstName,
       lastName: lastName ?? this.lastName,
       email: email ?? this.email,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      emailVerified: emailVerified ?? this.emailVerified,
+      phoneEnrolled: phoneEnrolled ?? this.phoneEnrolled,
     );
   }
 
@@ -58,6 +76,9 @@ class UserModel {
       firstName: '',
       lastName: '',
       email: '',
+      phoneNumber: '',
+      emailVerified: false,
+      phoneEnrolled: false,
     );
   }
 }

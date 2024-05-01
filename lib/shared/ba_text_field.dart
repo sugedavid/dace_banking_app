@@ -20,6 +20,7 @@ class BATextField extends StatelessWidget {
     this.readOnly = false,
     this.validator,
     this.inputFormatters,
+    this.focusNode,
   });
 
   final String labelText;
@@ -33,13 +34,14 @@ class BATextField extends StatelessWidget {
   final bool? readOnly;
   final Function()? validator;
   final List<TextInputFormatter>? inputFormatters;
+  final FocusNode? focusNode;
 
   String? Function(String?)? _validator() {
     // email validation
     if (textInputType == TextInputType.emailAddress) {
       return (value) {
         if (value == null || value.isEmpty) {
-          return 'Please enter your email';
+          return 'Please enter ${labelText.toLowerCase()}';
         } else if (!RegExp(
                 r"^[a-zA-Z0-9.a-zA-Z0-9._%+-]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
             .hasMatch(value)) {
@@ -53,7 +55,7 @@ class BATextField extends StatelessWidget {
         textInputType == TextInputType.name) {
       return (value) {
         if (value == null || value.isEmpty) {
-          return 'Please enter your name';
+          return 'Please enter ${labelText.toLowerCase()}';
         } else if (value.length < 2) {
           return 'Name must be at least 2 characters long';
         }
@@ -64,9 +66,20 @@ class BATextField extends StatelessWidget {
     else if (obscureText == true) {
       return (value) {
         if (value == null || value.isEmpty) {
-          return 'Please enter your password';
+          return 'Please enter ${labelText.toLowerCase()}';
         } else if (validate! && value.length < 8) {
           return 'Password must be at least 8 characters long';
+        }
+        return null;
+      };
+    }
+    // phone validation
+    else if (textInputType == TextInputType.phone) {
+      return (value) {
+        if (value == null || value.isEmpty) {
+          return 'Please enter ${labelText.toLowerCase()}';
+        } else if (validate! && value.length < 10) {
+          return 'Phone must be at least 10 digits long';
         }
         return null;
       };
@@ -76,7 +89,7 @@ class BATextField extends StatelessWidget {
     else if (validator != null) {
       return (value) {
         if (value == null || value.isEmpty) {
-          return 'Please enter your $labelText';
+          return 'Please enter ${labelText.toLowerCase()}';
         } else {
           return validator!();
         }
@@ -130,6 +143,7 @@ class BATextField extends StatelessWidget {
             obscureText: obscureText!,
             controller: controller,
             keyboardType: textInputType,
+            focusNode: focusNode,
             decoration: InputDecoration(
               filled: true,
               fillColor: AppColors.backgroundColor,
@@ -142,13 +156,22 @@ class BATextField extends StatelessWidget {
               ),
               enabledBorder: OutlineInputBorder(
                 borderSide: const BorderSide(
-                    color: Colors.grey), // Change the border color here
+                  color: AppColors.backgroundColor,
+                ), // Change the border color here
+                borderRadius: BorderRadius.circular(4.0),
+              ),
+              disabledBorder: OutlineInputBorder(
+                borderSide: const BorderSide(
+                  color: AppColors.backgroundColor,
+                ), // Change the border color here
                 borderRadius: BorderRadius.circular(4.0),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(4.0),
                 borderSide: BorderSide(
-                  color: readOnly! ? Colors.grey : AppColors.primaryColor,
+                  color: readOnly!
+                      ? AppColors.backgroundColor
+                      : AppColors.primaryColor,
                 ), // Set focused border color to transparent
               ),
             ),

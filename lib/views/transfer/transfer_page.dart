@@ -80,7 +80,7 @@ class _TransferPageState extends State<TransferPage> {
               hintText: '##-##-##',
               validate: true,
               controller: sortCodeController,
-              textInputType: TextInputType.text,
+              textInputType: TextInputType.number,
               inputFormatters: [
                 FilteringTextInputFormatter.digitsOnly,
                 LengthLimitingTextInputFormatter(6),
@@ -157,10 +157,6 @@ class _TransferPageState extends State<TransferPage> {
             // deposit button
             BAPrimaryButton(
                 text: 'Transfer',
-                enable: sortCodeController.text.isNotEmpty &&
-                    amountController.text.isNotEmpty &&
-                    firstNameController.text.isNotEmpty &&
-                    lastNameController.text.isNotEmpty,
                 onPressed: () async {
                   // check if details entered matches user's account details
                   if (sortCodeController.text ==
@@ -168,21 +164,23 @@ class _TransferPageState extends State<TransferPage> {
                       recipientAccountController.text ==
                           widget.currentAccount.accountNumber) {
                     showToast(
-                        "Cannot transfer to your own bank account", context);
+                        "Cannot transfer to your own bank account", context,
+                        status: Status.warning);
                     return;
                   }
 
                   if (formKey.currentState!.validate()) {
                     final currentBalance =
                         double.parse(widget.currentAccount.amount);
-                    final newBalance =
-                        currentBalance - double.parse(amountController.text);
+                    final amountToSubtract =
+                        double.parse(amountController.text);
+                    final newBalance = currentBalance - amountToSubtract;
 
                     await transferCash(
                       userId: authUser()?.uid ?? '',
                       accountId: widget.currentAccount.accountId,
                       accountNumber: widget.currentAccount.accountNumber,
-                      amount: amountController.text,
+                      amount: amountToSubtract.toStringAsFixed(0),
                       newBalance: newBalance.toStringAsFixed(2),
                       recipientsortCode: sortCodeController.text,
                       recipientAccountNumber: recipientAccountController.text,

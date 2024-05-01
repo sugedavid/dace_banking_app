@@ -1,4 +1,6 @@
 // update account balance
+import 'dart:math';
+
 import 'package:banking_app/models/account.dart';
 import 'package:banking_app/models/recipient.dart';
 import 'package:banking_app/shared/main_scaffold.dart';
@@ -33,8 +35,9 @@ Future<void> depositCash(
       var transaction = TransactionModel(
         transactionId: transactionRef.id,
         transactionType: 'Deposit',
-        transactionStatus: 'completed',
+        transactionStatus: 'Completed',
         transactionDescription: transactionDescription,
+        transactionRef: generateTransactionReceipt('DEP'),
         userId: userId,
         accountId: accountId,
         accountNumber: accountNumber,
@@ -47,7 +50,7 @@ Future<void> depositCash(
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => const SuccessPage(
-              message: 'Amount deposited sucessfully',
+              message: 'Amount deposited successfully',
               secondaryBtnTxt: 'Make another transaction',
             ),
           ),
@@ -56,7 +59,7 @@ Future<void> depositCash(
     });
   } catch (error) {
     // error
-    showToast('Error crediting account: $error', context);
+    showToast('Error crediting account: $error', context, status: Status.error);
   }
 }
 
@@ -82,7 +85,8 @@ Future<void> withdrawCash(
       var transaction = TransactionModel(
         transactionId: transactionRef.id,
         transactionType: 'Withdrawal',
-        transactionStatus: 'completed',
+        transactionStatus: 'Completed',
+        transactionRef: generateTransactionReceipt('WITH'),
         userId: userId,
         accountId: accountId,
         accountNumber: accountNumber,
@@ -95,7 +99,7 @@ Future<void> withdrawCash(
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => const SuccessPage(
-              message: 'Amount withdrawn sucessfully',
+              message: 'Amount withdrawn successfully',
               secondaryBtnTxt: 'Make another transaction',
             ),
           ),
@@ -104,7 +108,7 @@ Future<void> withdrawCash(
     });
   } catch (error) {
     // error
-    showToast('Error withdrawing cash: $error', context);
+    showToast('Error withdrawing cash: $error', context, status: Status.error);
   }
 }
 
@@ -132,7 +136,8 @@ Future<void> transferCash(
     // exit fun if account isn't found
     if (recipientAccount.accountId.isEmpty) return;
 
-    var newReceipientBalance = recipientAccount.amount + amount;
+    var newReceipientBalance =
+        double.parse(recipientAccount.amount) + double.parse(amount);
 
     // update sender's account
     await dbInstance.collection('bankAccounts').doc(accountId).update({
@@ -144,7 +149,7 @@ Future<void> transferCash(
           .collection('bankAccounts')
           .doc(recipientAccount.accountId)
           .update({
-        'amount': newReceipientBalance,
+        'amount': newReceipientBalance.toStringAsFixed(2),
         'updatedAt': createdAt,
       }).then((value) async {
         // generate transaction
@@ -154,7 +159,8 @@ Future<void> transferCash(
         var transaction = TransactionModel(
           transactionId: transactionRef.id,
           transactionType: 'Transfer',
-          transactionStatus: 'completed',
+          transactionStatus: 'Completed',
+          transactionRef: generateTransactionReceipt('TRA'),
           userId: userId,
           accountId: accountId,
           accountNumber: accountNumber,
@@ -176,7 +182,7 @@ Future<void> transferCash(
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => const SuccessPage(
-                message: 'Amount transfered sucessfully',
+                message: 'Amount transfered successfully',
                 secondaryBtnTxt: 'Make another transaction',
               ),
             ),
@@ -186,7 +192,7 @@ Future<void> transferCash(
     });
   } catch (error) {
     // error
-    showToast('Error transfering cash: $error', context);
+    showToast('Error transfering cash: $error', context, status: Status.error);
   }
 }
 
@@ -205,14 +211,16 @@ Future<AccountModel> fetchUserAccount({
     var bankSnapshot = await bankRef.get();
     if (bankSnapshot.docs.isEmpty) {
       if (context.mounted) {
-        showToast("Recipient's bank details not found", context);
+        showToast("Recipient's bank details not found", context,
+            status: Status.warning);
       }
     } else {
       recipient = AccountModel.fromDocument(bankSnapshot.docs[0]);
     }
   } catch (error) {
     // error fetching transaction data
-    showToast("Error fetching recipient's info: $error", context);
+    showToast("Error fetching recipient's info: $error", context,
+        status: Status.error);
   }
   return recipient;
 }
@@ -224,7 +232,8 @@ Future<void> generateTransaction(
   try {
     var transactionRef = dbInstance.collection('transactions');
     await transactionRef.add(transaction.toMap()).then((value) {
-      showToast('Transaction generated sucessfully!', context);
+      showToast('Transaction generated successfully!', context,
+          status: Status.success);
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
             builder: (context) => const MainScaffold(),
@@ -233,6 +242,17 @@ Future<void> generateTransaction(
     });
   } catch (error) {
     // error generating transaction
-    showToast('Error generating transaction: $error', context);
+    showToast('Error generating transaction: $error', context,
+        status: Status.error);
   }
+}
+
+// generate transaction ref
+String generateTransactionReceipt(String transactionType) {
+  String randomString = "";
+  const String chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+  for (int i = 0; i < 10; i++) {
+    randomString += chars[Random().nextInt(chars.length)];
+  }
+  return '$transactionType-$randomString';
 }

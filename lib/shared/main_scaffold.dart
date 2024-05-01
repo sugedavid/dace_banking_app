@@ -1,11 +1,13 @@
 import 'package:banking_app/models/account.dart';
 import 'package:banking_app/utils/assets.dart';
+import 'package:banking_app/views/email_verification/email_verification_page.dart';
 import 'package:banking_app/views/transactions/transactions_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../models/user.dart';
 import '../utils/colors.dart';
 import '../utils/firebase_utils/user_utils.dart';
-import '../models/user.dart';
 import '../views/home/home_page.dart';
 import '../views/profile/edit_profile_page.dart';
 import '../views/profile/profile_page.dart';
@@ -43,8 +45,19 @@ class _MainScaffoldState extends State<MainScaffold> {
     UserModel fetchedUserData = await authUserInfo(context);
     List<AccountModel> bankAccounts =
         await fetchBankAccountsByUserId(fetchedUserData.userId);
+    User? user = authUser();
     setState(() {
       userData = fetchedUserData;
+
+      if (!(user?.emailVerified ?? false)) {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+              builder: (context) => EmailVerificationPage(
+                userModel: userData,
+              ),
+            ),
+            (route) => false);
+      }
       _widgetOptions = <Widget>[
         HomePage(
           userData: userData,

@@ -34,7 +34,6 @@ class LogInPage extends StatelessWidget {
               labelText: 'Password',
               controller: passwordController,
               obscureText: true,
-              validate: false,
               showOptional: false,
             ),
 
@@ -57,7 +56,7 @@ class LogInPage extends StatelessWidget {
       ),
       secondaryActionText: "Don't have an account? ",
       secondaryRichText: 'Sign Up',
-      onSecondaryRichCallTap: () => Navigator.of(context).pushReplacement(
+      onSecondaryRichCallTap: () => Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => const ResgistrationPage(),
         ),

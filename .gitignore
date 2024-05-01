@@ -102,3 +102,5 @@ app.*.map.json
 /macos/.flutter-plugins
 /macos/Flutter/App.framework
 /macos/Flutter/Flutter.framework
+
+*.keystore
