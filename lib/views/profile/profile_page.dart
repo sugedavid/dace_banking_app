@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/user.dart';
+import '../../shared/ba_text_field.dart';
 import '../../shared/ba_toast_notification.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -84,17 +85,7 @@ class ProfilePageState extends State<ProfilePage> {
 
                 // two factor
                 ListTile(
-                  // onTap: () async => await enrollSecondFactor(
-                  //   widget.userData.phoneNumber,
-                  //   widget.userData,
-                  //   context,
-                  // ),
-                  //  Navigator.of(context).push(
-                  //   MaterialPageRoute(
-                  //     builder: (context) =>
-                  //         PhoneEnrollmentPage(userModel: widget.userData),
-                  //   ),
-                  // ),
+                  onTap: () => showReAuthDialog(context),
                   leading: const Icon(
                     Icons.phone_locked_outlined,
                     size: 20,
@@ -103,23 +94,26 @@ class ProfilePageState extends State<ProfilePage> {
                       ? 'Setup two factor'
                       : widget.userData.phoneNumber),
                   trailing: ActionChip(
-                    label: Text(widget.userData.phoneEnrolled
-                        ? 'Two factor enabled'
-                        : 'Two factor not setup'),
-                    padding: EdgeInsets.zero,
-                    backgroundColor: widget.userData.phoneEnrolled
-                        ? Colors.green.withOpacity(0.1)
-                        : Colors.red.withOpacity(0.1),
-                    labelStyle: TextStyle(
-                        color: widget.userData.phoneEnrolled
-                            ? Colors.green
-                            : Colors.red,
-                        fontSize: 12),
-                    side: BorderSide.none,
-                    onPressed: () async => user?.emailVerified ?? false
-                        ? showToast('Two factor enabled', context)
-                        : showToast('Two factor not setup', context),
-                  ),
+                      label: Text(widget.userData.phoneEnrolled
+                          ? 'Two factor Enabled'
+                          : 'Not setup'),
+                      padding: EdgeInsets.zero,
+                      backgroundColor: widget.userData.phoneEnrolled
+                          ? Colors.green.withOpacity(0.1)
+                          : Colors.red.withOpacity(0.1),
+                      labelStyle: TextStyle(
+                          color: widget.userData.phoneEnrolled
+                              ? Colors.green
+                              : Colors.red,
+                          fontSize: 12),
+                      side: BorderSide.none,
+                      onPressed: () async {
+                        if (widget.userData.phoneEnrolled) {
+                          showToast('Two factor enabled', context);
+                        } else {
+                          showReAuthDialog(context);
+                        }
+                      }),
                   // trailing:
                   //     const Icon(Icons.chevron_right, color: Colors.black26),
                 ),
@@ -244,5 +238,53 @@ class ProfilePageState extends State<ProfilePage> {
         ],
       ),
     );
+  }
+
+  void showReAuthDialog(BuildContext context) {
+    final formKey = GlobalKey<FormState>();
+    final emailController = TextEditingController(text: widget.userData.email);
+    final passwordController = TextEditingController();
+
+    BaDialog.showBaDialog(
+        context: context,
+        title: 'Sign In',
+        cancelText: 'Cancel',
+        onCancel: () => Navigator.of(context).pop(),
+        okText: 'Continue',
+        onOk: () async {
+          if (formKey.currentState!.validate()) {
+            Navigator.of(context).pop();
+            await reAuthUser(
+              emailController.text,
+              passwordController.text,
+              widget.userData,
+              context,
+            );
+          }
+        },
+        content: Form(
+          key: formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              AppSpacing.large,
+              // email
+              BATextField(
+                labelText: 'Email',
+                controller: emailController,
+                textInputType: TextInputType.emailAddress,
+              ),
+
+              // password
+              BATextField(
+                labelText: 'Password',
+                controller: passwordController,
+                obscureText: true,
+                showOptional: false,
+              ),
+            ],
+          ),
+        ));
   }
 }

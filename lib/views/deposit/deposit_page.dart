@@ -81,7 +81,6 @@ class _DepositPageState extends State<DepositPage> {
             // deposit button
             BAPrimaryButton(
                 text: 'Deposit',
-                enable: amountController.text.isNotEmpty,
                 onPressed: () async {
                   if (formKey.currentState!.validate()) {
                     final account = widget.bankAccounts.firstWhere(

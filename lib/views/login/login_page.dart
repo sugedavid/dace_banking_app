@@ -34,7 +34,6 @@ class LogInPage extends StatelessWidget {
               labelText: 'Password',
               controller: passwordController,
               obscureText: true,
-              validate: false,
               showOptional: false,
             ),
 

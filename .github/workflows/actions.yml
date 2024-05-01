@@ -29,24 +29,39 @@ jobs:
         with:
           channel: 'stable'
       - run: flutter pub get
-      - run: flutter build apk
+
+      # build debug APK
+      - name: Build debug APK
+        run: flutter build apk --debug
+      - uses: actions/upload-artifact@v1
+        with:
+          name: debug-apk
+          path: build/app/outputs/apk/debug/app-debug.apk
+
+      # build release APK
+      - name: Build release APK
+        run: flutter build apk --release
       - uses: actions/upload-artifact@v1
         with:
           name: release-apk
           path: build/app/outputs/apk/release/app-release.apk
-      - name: upload artifact to Firebase App Distribution
-        if: github.ref == 'refs/heads/master'
-        uses: wzieba/Firebase-Distribution-Github-Action@v1
-        with:
-          appId: ${{secrets.APPID}}
-          token: ${{secrets.TOKEN}}
-          groups: tester-prod
-          file: build/app/outputs/apk/release/app-release.apk
-      - name: upload artifact to Firebase App Distribution
+
+      # upload debug APK to Firebase App Distribution
+      - name: Upload debug artifact to Firebase App Distribution
         if: github.ref == 'refs/heads/develop'
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
           appId: ${{secrets.APPID}}
           token: ${{secrets.TOKEN}}
-          groups: pre-tester
+          groups: tester-debug
+          file: build/app/outputs/apk/debug/app-debug.apk
+
+      # upload release APK to Firebase App Distribution
+      - name: Upload release artifact to Firebase App Distribution
+        if: github.ref == 'refs/heads/master'
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{secrets.APPID}}
+          token: ${{secrets.TOKEN}}
+          groups: tester-release
           file: build/app/outputs/apk/release/app-release.apk

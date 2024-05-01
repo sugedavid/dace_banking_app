@@ -71,7 +71,7 @@ class _TransactionDetailPageState extends State<TransactionDetailPage> {
             dense: true,
             contentPadding: EdgeInsets.zero,
             title: const Text(
-              'Transaction Type',
+              'Type',
               style: TextStyle(
                   color: Colors.blueGrey,
                   fontSize: 15,
@@ -88,7 +88,7 @@ class _TransactionDetailPageState extends State<TransactionDetailPage> {
             dense: true,
             contentPadding: EdgeInsets.zero,
             title: const Text(
-              'Transaction Status',
+              'Status',
               style: TextStyle(
                   color: Colors.blueGrey,
                   fontSize: 15,
@@ -105,7 +105,7 @@ class _TransactionDetailPageState extends State<TransactionDetailPage> {
             dense: true,
             contentPadding: EdgeInsets.zero,
             title: const Text(
-              'Transaction Time',
+              'Time',
               style: TextStyle(
                   color: Colors.blueGrey,
                   fontSize: 15,
