@@ -23,20 +23,36 @@ class AccountCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(10.0),
         ),
         child: ListTile(
-          title: Text(
-            '$accountType Account',
-            style: const TextStyle(
-              fontSize: 12.0,
-              color: Colors.white,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          subtitle: Text(
-            accountNumber,
-            style: const TextStyle(
-              fontSize: 12.0,
-              color: Colors.white,
-              fontWeight: FontWeight.w500,
+          isThreeLine: false,
+          dense: true,
+          title: Align(
+            alignment: Alignment.centerLeft,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '$accountType Account',
+                  style: const TextStyle(
+                    fontSize: 12.0,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                ActionChip(
+                  padding: EdgeInsets.zero,
+                  backgroundColor: AppColors.primaryColor.withOpacity(0.8),
+                  side: BorderSide.none,
+                  onPressed: () {},
+                  label: Text(
+                    accountNumber,
+                    style: const TextStyle(
+                      fontSize: 12.5,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
           trailing: isLoading

@@ -72,7 +72,6 @@ class _WithdrawPageState extends State<WithdrawPage> {
             // deposit button
             BAPrimaryButton(
                 text: 'Withdraw',
-                enable: amountController.text.isNotEmpty,
                 onPressed: () async {
                   if (formKey.currentState!.validate()) {
                     final account = widget.bankAccounts.firstWhere(

@@ -157,10 +157,6 @@ class _TransferPageState extends State<TransferPage> {
             // deposit button
             BAPrimaryButton(
                 text: 'Transfer',
-                enable: sortCodeController.text.isNotEmpty &&
-                    amountController.text.isNotEmpty &&
-                    firstNameController.text.isNotEmpty &&
-                    lastNameController.text.isNotEmpty,
                 onPressed: () async {
                   // check if details entered matches user's account details
                   if (sortCodeController.text ==

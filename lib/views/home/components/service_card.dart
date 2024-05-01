@@ -19,7 +19,7 @@ class ServiceCard extends StatelessWidget {
         color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(10.0),
       ),
-      padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
+      padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
       child: InkWell(
         onTap: onPressed,
         child: Column(

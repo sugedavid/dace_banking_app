@@ -2,8 +2,8 @@ import 'dart:math';
 
 import 'package:banking_app/models/user.dart';
 import 'package:banking_app/utils/firebase_utils/authentication_utils.dart';
+import 'package:banking_app/views/email_verification/email_verification_page.dart';
 import 'package:banking_app/views/login/login_page.dart';
-import 'package:banking_app/views/phone_enrollment/phone_enrollment_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -74,7 +74,7 @@ Future<void> updateUser(
           verifyUserEmail(context);
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
-                builder: (context) => PhoneEnrollmentPage(
+                builder: (context) => EmailVerificationPage(
                   userModel: user,
                 ),
               ),
@@ -140,6 +140,34 @@ User? authUser() {
   user?.reload();
 
   return user;
+}
+
+// reauthenticate user
+// reauthenticate user
+Future<void> reAuthUser(
+  String email,
+  String password,
+  UserModel? userModel,
+  BuildContext context,
+) async {
+  User? user = FirebaseAuth.instance.currentUser;
+  try {
+    // reauthenticate user
+    await user?.reauthenticateWithCredential(
+      EmailAuthProvider.credential(email: email, password: password),
+    );
+
+    // enroll second factor
+    if (context.mounted) {
+      enrollSecondFactor(
+        userModel?.phoneNumber ?? '',
+        userModel ?? UserModel.toEmpty(),
+        context,
+      );
+    }
+  } catch (error) {
+    showToast('Oops! Something went wrong: $error', context);
+  }
 }
 
 // user information

@@ -196,7 +196,7 @@ class _HomePageState extends State<HomePage> {
                             MaterialPageRoute(
                               builder: (context) => AccountsPage(
                                 userData: widget.userData,
-                                bankAccounts: bankAccounts,
+                                accountModel: accountData,
                               ),
                             ),
                           ),

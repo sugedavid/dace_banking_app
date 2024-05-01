@@ -6,13 +6,15 @@ class BAPrimaryButton extends StatefulWidget {
   final String text;
   final Future<void> Function() onPressed;
   final bool enable;
+  final Color? backgroundColor;
 
-  const BAPrimaryButton({
-    Key? key,
-    required this.text,
-    required this.onPressed,
-    this.enable = true,
-  }) : super(key: key);
+  const BAPrimaryButton(
+      {Key? key,
+      required this.text,
+      required this.onPressed,
+      this.enable = true,
+      this.backgroundColor = AppColors.primaryColor})
+      : super(key: key);
 
   @override
   BAPrimaryButtonState createState() => BAPrimaryButtonState();
@@ -32,7 +34,7 @@ class BAPrimaryButtonState extends State<BAPrimaryButton> {
       width: 395,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.primaryColor,
+          backgroundColor: widget.backgroundColor,
           foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(4.0),

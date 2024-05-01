@@ -41,7 +41,7 @@ class BATextField extends StatelessWidget {
     if (textInputType == TextInputType.emailAddress) {
       return (value) {
         if (value == null || value.isEmpty) {
-          return 'Please enter your email';
+          return 'Please enter ${labelText.toLowerCase()}';
         } else if (!RegExp(
                 r"^[a-zA-Z0-9.a-zA-Z0-9._%+-]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
             .hasMatch(value)) {
@@ -55,7 +55,7 @@ class BATextField extends StatelessWidget {
         textInputType == TextInputType.name) {
       return (value) {
         if (value == null || value.isEmpty) {
-          return 'Please enter your name';
+          return 'Please enter ${labelText.toLowerCase()}';
         } else if (value.length < 2) {
           return 'Name must be at least 2 characters long';
         }
@@ -66,7 +66,7 @@ class BATextField extends StatelessWidget {
     else if (obscureText == true) {
       return (value) {
         if (value == null || value.isEmpty) {
-          return 'Please enter your password';
+          return 'Please enter ${labelText.toLowerCase()}';
         } else if (validate! && value.length < 8) {
           return 'Password must be at least 8 characters long';
         }
@@ -77,7 +77,7 @@ class BATextField extends StatelessWidget {
     else if (textInputType == TextInputType.phone) {
       return (value) {
         if (value == null || value.isEmpty) {
-          return 'Please enter your phone number';
+          return 'Please enter ${labelText.toLowerCase()}';
         } else if (validate! && value.length < 10) {
           return 'Phone must be at least 10 digits long';
         }
@@ -89,7 +89,7 @@ class BATextField extends StatelessWidget {
     else if (validator != null) {
       return (value) {
         if (value == null || value.isEmpty) {
-          return 'Please enter your $labelText';
+          return 'Please enter ${labelText.toLowerCase()}';
         } else {
           return validator!();
         }

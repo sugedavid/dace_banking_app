@@ -54,7 +54,11 @@ Future<void> logInUser(
         .then((UserCredential value) {
       // navigate to home page
       showToast('Signed in', context);
-      handlePhoneEnrollment(user, context);
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+            builder: (context) => const MainScaffold(),
+          ),
+          (route) => false);
     });
   } on FirebaseAuthMultiFactorException catch (e) {
     // verify second factor
@@ -90,8 +94,8 @@ Future<void> handlePhoneEnrollment(
     UserModel userModel, BuildContext context) async {
   User? currUser = authUser();
   await currUser!.reload();
-  if (currUser.emailVerified && userModel.phoneEnrolled) {
-    // proceed with phone number enrollment
+  if (currUser.emailVerified) {
+    // proceed to main page
     if (context.mounted) {
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
@@ -100,7 +104,7 @@ Future<void> handlePhoneEnrollment(
           (route) => false);
     }
   } else {
-    // proceed to main page
+    // proceed with phone number enrollment
     if (context.mounted) {
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
@@ -120,7 +124,6 @@ Future<void> enrollSecondFactor(
   BuildContext context,
 ) async {
   final user = authUser();
-  user?.reload();
   final session = await user?.multiFactor.getSession();
   final auth = FirebaseAuth.instance;
   await auth.verifyPhoneNumber(

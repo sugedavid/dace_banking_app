@@ -4,13 +4,11 @@ import 'package:banking_app/utils/firebase_utils/authentication_utils.dart';
 import 'package:banking_app/utils/firebase_utils/user_utils.dart';
 import 'package:banking_app/utils/spacing.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/user.dart';
 import '../../shared/ba_primary_button.dart';
 import '../../shared/ba_text_field.dart';
-import '../../utils/colors.dart';
 
 class PhoneEnrollmentPage extends StatefulWidget {
   const PhoneEnrollmentPage({
@@ -28,7 +26,6 @@ class PhoneEnrollmentPage extends StatefulWidget {
 
 class PhoneEnrollmentPageState extends State<PhoneEnrollmentPage>
     with SingleTickerProviderStateMixin {
-  late User? user;
   UserModel userModel = UserModel.toEmpty();
 
   final phoneController = TextEditingController();
@@ -40,7 +37,6 @@ class PhoneEnrollmentPageState extends State<PhoneEnrollmentPage>
 
   @override
   void initState() {
-    user = authUser();
     fetchUserData();
     super.initState();
   }
@@ -72,9 +68,7 @@ class PhoneEnrollmentPageState extends State<PhoneEnrollmentPage>
   @override
   Widget build(BuildContext context) {
     return SinglePageScaffold(
-      title: (user?.emailVerified ?? false) || user == null
-          ? 'Two Factor Authentication'
-          : 'Account Verification',
+      title: 'Two Factor Authentication',
       child: Form(
         key: formKey,
         child: Center(
@@ -83,11 +77,7 @@ class PhoneEnrollmentPageState extends State<PhoneEnrollmentPage>
             mainAxisSize: MainAxisSize.min,
             children: [
               Image.asset(
-                ((user?.emailVerified ?? false) ||
-                        widget.userModel.emailVerified ||
-                        widget.firebaseAuthMultiFactorException != null)
-                    ? AppAssets.phoneVerificationImg
-                    : AppAssets.emailVerificationImg,
+                AppAssets.phoneVerificationImg,
                 width: 70,
                 height: 70,
               ),
@@ -98,9 +88,7 @@ class PhoneEnrollmentPageState extends State<PhoneEnrollmentPage>
                 widget.firebaseAuthMultiFactorException != null ||
                         widget.userModel.phoneEnrolled
                     ? 'Verify Phone'
-                    : !userModel.phoneEnrolled && (user?.emailVerified ?? false)
-                        ? 'Enroll Phone Number'
-                        : 'Verify Email',
+                    : 'Enroll Phone Number',
                 style:
                     const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
@@ -109,18 +97,13 @@ class PhoneEnrollmentPageState extends State<PhoneEnrollmentPage>
               Text.rich(
                 TextSpan(
                   children: [
-                    TextSpan(
-                      text: widget.firebaseAuthMultiFactorException != null ||
-                              (!userModel.phoneEnrolled &&
-                                  (user?.emailVerified ?? false))
-                          ? 'An sms with a code will be sent to your phone number'
-                          : 'An email with a verification link will be sent to ',
-                      style:
-                          const TextStyle(fontSize: 14, color: Colors.blueGrey),
+                    const TextSpan(
+                      text:
+                          'An sms with a verification code will be sent to your phone number ',
+                      style: TextStyle(fontSize: 14, color: Colors.blueGrey),
                     ),
                     TextSpan(
-                      text:
-                          user?.emailVerified ?? false ? '' : user?.email ?? '',
+                      text: userModel.phoneNumber,
                       style: const TextStyle(
                         fontSize: 14,
                         color: Colors.blueGrey,
@@ -134,8 +117,7 @@ class PhoneEnrollmentPageState extends State<PhoneEnrollmentPage>
               AppSpacing.large,
 
               // phoneNumber
-              if ((!userModel.phoneEnrolled &&
-                  (user?.emailVerified ?? false))) ...{
+              if (widget.firebaseAuthMultiFactorException == null) ...{
                 AppSpacing.medium,
                 BATextField(
                   labelText: 'Phone',
@@ -145,53 +127,28 @@ class PhoneEnrollmentPageState extends State<PhoneEnrollmentPage>
                 ),
               },
 
-              if (widget.firebaseAuthMultiFactorException != null ||
-                  (user?.emailVerified ?? false)) ...{
-                BATextField(
-                  labelText: 'Code',
-                  hintText: '######',
-                  controller: codeController,
-                  textInputType: TextInputType.number,
-                ),
-                AppSpacing.large,
-              },
+              BATextField(
+                labelText: 'Code',
+                hintText: '######',
+                controller: codeController,
+                textInputType: TextInputType.number,
+              ),
+              AppSpacing.large,
 
               // continue
               BAPrimaryButton(
-                  text: widget.firebaseAuthMultiFactorException != null ||
-                          (!userModel.phoneEnrolled &&
-                              (user?.emailVerified ?? false))
-                      ? 'Continue'
-                      : 'Send verification email',
-                  onPressed: !(user?.emailVerified ?? false) &&
-                          widget.firebaseAuthMultiFactorException == null
-                      ? () async => await verifyUserEmail(context)
-                      : () async {
-                          if (formKey.currentState!.validate()) {
-                            if (Navigator.canPop(context)) {
-                              Navigator.pop(context, codeController.text);
-                            } else {
-                              if (userModel.phoneEnrolled) {
-                                await verifySecondFactor(
-                                  widget.firebaseAuthMultiFactorException,
-                                  widget.userModel,
-                                  context,
-                                );
-                              } else {
-                                await enrollSecondFactor(
-                                  phoneController.text,
-                                  widget.userModel,
-                                  context,
-                                );
-                              }
-                            }
-                          }
-                        }),
+                  text: 'Continue',
+                  onPressed: () async {
+                    if (formKey.currentState!.validate()) {
+                      if (Navigator.canPop(context)) {
+                        Navigator.pop(context, codeController.text);
+                      }
+                    }
+                  }),
               AppSpacing.medium,
 
               // resend code
-              if ((user?.emailVerified ?? false) ||
-                  widget.firebaseAuthMultiFactorException != null)
+              if (widget.firebaseAuthMultiFactorException != null)
                 TextButton(
                   onPressed: resend
                       ? null
@@ -204,11 +161,12 @@ class PhoneEnrollmentPageState extends State<PhoneEnrollmentPage>
                               context,
                             );
                           } else {
-                            await enrollSecondFactor(
-                              phoneController.text,
-                              widget.userModel,
-                              context,
-                            );
+                            // await enrollSecondFactor(
+                            //   phoneController.text,
+                            //   widget.userModel,
+                            //   user,
+                            //   context,
+                            // );
                           }
                         },
                   child: Text(resend
@@ -216,37 +174,9 @@ class PhoneEnrollmentPageState extends State<PhoneEnrollmentPage>
                       : 'Resend Code'),
                 ),
 
-              // verified email
-              if (!(user?.emailVerified ?? false) &&
-                  widget.firebaseAuthMultiFactorException == null)
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: RichText(
-                    text: TextSpan(
-                      text: 'Verified already? ',
-                      style:
-                          const TextStyle(fontSize: 14, color: Colors.blueGrey),
-                      children: <TextSpan>[
-                        TextSpan(
-                          text: 'Continue',
-                          style: const TextStyle(
-                              color: AppColors.primaryColor,
-                              fontWeight: FontWeight.w500),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () async => await enrollSecondFactor(
-                                  phoneController.text,
-                                  widget.userModel,
-                                  context,
-                                ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
               // sign out
               TextButton(
-                onPressed: () => signOutUser(context),
+                onPressed: () async => await signOutUser(context),
                 child: const Text(
                   'Sign out',
                   style: TextStyle(
