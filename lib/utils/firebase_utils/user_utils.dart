@@ -84,7 +84,8 @@ Future<void> updateUser(
     });
   } catch (error) {
     // error handling
-    showToast('Oops! Something went wrong: $error', context);
+    showToast('Oops! Something went wrong: $error', context,
+        status: Status.error);
   }
 }
 
@@ -166,7 +167,8 @@ Future<void> reAuthUser(
       );
     }
   } catch (error) {
-    showToast('Oops! Something went wrong: $error', context);
+    showToast('Oops! Something went wrong: $error', context,
+        status: Status.error);
   }
 }
 
@@ -195,7 +197,8 @@ Future<UserModel> authUserInfo(BuildContext context) async {
       }
     } catch (error) {
       // error fetching user information
-      showToast('Error getting your information: $error', context);
+      showToast('Error getting your information: $error', context,
+          status: Status.error);
       return data;
     }
   } else {
@@ -217,15 +220,17 @@ Future<void> updateUserInfo(
         'firstName': firstName,
         'lastName': lastName,
       }).then((value) {
-        showToast('Profile updated successfully!', context);
+        showToast('Profile updated successfully!', context,
+            status: Status.success);
       });
     } catch (error) {
       // error updating user profile
-      showToast('Error updating your profile: $error', context);
+      showToast('Error updating your profile: $error', context,
+          status: Status.error);
     }
   } else {
     // user is not authenticated
-    showToast('You are not authenticated', context);
+    showToast('You are not authenticated', context, status: Status.error);
   }
 }
 
@@ -269,7 +274,8 @@ Future<void> closeUserAccount(BuildContext context) async {
       });
 
       if (context.mounted) {
-        showToast('Account closed successfully!', context);
+        showToast('Account closed successfully!', context,
+            status: Status.error);
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (context) => const LogInPage(),
@@ -278,11 +284,12 @@ Future<void> closeUserAccount(BuildContext context) async {
       }
     } catch (error) {
       // error deleting user
-      showToast('Error closing your account: $error', context);
+      showToast('Error closing your account: $error', context,
+          status: Status.error);
     }
   } else {
     // user is not authenticated
-    showToast('You are not authenticated', context);
+    showToast('You are not authenticated', context, status: Status.error);
   }
 }
 
@@ -294,7 +301,8 @@ Future<void> resetPassword(String email, BuildContext context) async {
     });
   } catch (error) {
     // error sending password reset email
-    showToast('Error sending password reset email: $error', context);
+    showToast('Error sending password reset email: $error', context,
+        status: Status.error);
   }
 }
 
@@ -321,7 +329,8 @@ Future<UserModel> getUserById(String userId, BuildContext context) async {
     }
   } catch (error) {
     // error fetching user information
-    showToast('Error getting your information: $error', context);
+    showToast('Error getting your information: $error', context,
+        status: Status.error);
     return data;
   }
 }
