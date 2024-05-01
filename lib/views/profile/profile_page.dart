@@ -77,7 +77,8 @@ class ProfilePageState extends State<ProfilePage> {
                         fontSize: 12),
                     side: BorderSide.none,
                     onPressed: () async => user?.emailVerified ?? false
-                        ? showToast('Email verified', context)
+                        ? showToast('Email verified', context,
+                            status: Status.info)
                         : await verifyUserEmail(context),
                   ),
                 ),
@@ -109,7 +110,8 @@ class ProfilePageState extends State<ProfilePage> {
                       side: BorderSide.none,
                       onPressed: () async {
                         if (widget.userData.phoneEnrolled) {
-                          showToast('Two factor enabled', context);
+                          showToast('Two factor enabled', context,
+                              status: Status.info);
                         } else {
                           showReAuthDialog(context);
                         }

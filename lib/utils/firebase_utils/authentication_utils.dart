@@ -28,16 +28,19 @@ Future<void> registerUser(
   } on FirebaseAuthException catch (e) {
     // error handling
     if (e.code == 'weak-password') {
-      showToast('The password provided is too weak.', context);
+      showToast('The password provided is too weak.', context,
+          status: Status.error);
     } else if (e.code == 'email-already-in-use') {
-      showToast('The account already exists for that email.', context);
+      showToast('The account already exists for that email.', context,
+          status: Status.error);
     } else {
-      showToast(e.message ?? 'Oops! Something went wrong', context);
+      showToast(e.message ?? 'Oops! Something went wrong', context,
+          status: Status.error);
     }
   } catch (e) {
     // error handling
-    showToast(
-        'Oops! Could not register your account: ${e.toString()}', context);
+    showToast('Oops! Could not register your account: ${e.toString()}', context,
+        status: Status.error);
   }
 }
 
@@ -130,7 +133,8 @@ Future<void> enrollSecondFactor(
     multiFactorSession: session,
     phoneNumber: phoneNumber,
     verificationCompleted: (_) {
-      showToast('Phone number enrolled successfully', context);
+      showToast('Phone number enrolled successfully', context,
+          status: Status.success);
     },
     verificationFailed: (e) {
       showToast('${e.message}', context,
@@ -140,7 +144,7 @@ Future<void> enrollSecondFactor(
           ));
     },
     codeSent: (String verificationId, int? resendToken) async {
-      showToast('Code sent successfully', context);
+      showToast('Code sent successfully', context, status: Status.success);
 
       String smsCode = await getSmsCodeFromUser(null, userModel, context) ?? '';
 
@@ -174,7 +178,9 @@ Future<void> enrollSecondFactor(
                 (route) => false);
           }
         } on FirebaseAuthException catch (e) {
-          if (context.mounted) showToast('${e.message}', context);
+          if (context.mounted) {
+            showToast('${e.message}', context, status: Status.error);
+          }
         }
       }
     },
@@ -200,7 +206,8 @@ Future<void> verifySecondFactor(
     multiFactorSession: firebaseAuthMultiFactorException?.resolver.session,
     multiFactorInfo: firstHint,
     verificationCompleted: (_) {
-      showToast('Phone number verified successfully', context);
+      showToast('Phone number verified successfully', context,
+          status: Status.success);
     },
     verificationFailed: (e) {
       showToast('${e.message}', context,
@@ -210,7 +217,7 @@ Future<void> verifySecondFactor(
           ));
     },
     codeSent: (String verificationId, int? resendToken) async {
-      showToast('Code sent successfully', context);
+      showToast('Code sent successfully', context, status: Status.success);
 
       String smsCode = await getSmsCodeFromUser(
               firebaseAuthMultiFactorException, userModel, context) ??
@@ -239,7 +246,7 @@ Future<void> verifySecondFactor(
 
           // navigate to main page
           if (context.mounted) {
-            showToast('Signed in', context);
+            showToast('Signed in', context, status: Status.success);
             Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(
                   builder: (context) => const MainScaffold(),
@@ -247,7 +254,9 @@ Future<void> verifySecondFactor(
                 (route) => false);
           }
         } on FirebaseAuthException catch (e) {
-          if (context.mounted) showToast('${e.message}', context);
+          if (context.mounted) {
+            showToast('${e.message}', context, status: Status.error);
+          }
         }
       }
     },
@@ -284,29 +293,33 @@ Future<void> verifyUserEmail(BuildContext context) async {
         'emailVerified': user.emailVerified,
       });
 
-      showToast('Email verification sent successfully', context);
+      showToast('Email verification sent successfully', context,
+          status: Status.success);
     });
   } on FirebaseAuthException catch (e) {
     // firebase error handling
     if (e.code == 'user-not-found') {
-      showToast('No user found for that email.', context);
+      showToast('No user found for that email.', context, status: Status.error);
     } else if (e.code == 'wrong-password') {
-      showToast('Wrong password provided for that user.', context);
+      showToast('Wrong password provided for that user.', context,
+          status: Status.error);
     } else if (e.code == 'INVALID_LOGIN_CREDENTIALS') {
-      showToast('Invalid login credentials', context);
+      showToast('Invalid login credentials', context, status: Status.error);
     } else {
-      showToast(e.message ?? 'Oops! Something went wrong', context);
+      showToast(e.message ?? 'Oops! Something went wrong', context,
+          status: Status.error);
     }
   } catch (e) {
     // error handling
-    showToast('Oops! Something went wrong: ${e.toString()}', context);
+    showToast('Oops! Something went wrong: ${e.toString()}', context,
+        status: Status.error);
   }
 }
 
 // sign out a user
 Future<void> signOutUser(BuildContext context) async {
   await FirebaseAuth.instance.signOut().then((value) {
-    showToast('Signed out', context);
+    showToast('Signed out', context, status: Status.success);
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(
           builder: (context) => const LogInPage(),
@@ -314,6 +327,7 @@ Future<void> signOutUser(BuildContext context) async {
         (route) => false);
   }).catchError((error) {
     // error handling
-    showToast('Oops! Something went wrong: $error', context);
+    showToast('Oops! Something went wrong: $error', context,
+        status: Status.error);
   });
 }

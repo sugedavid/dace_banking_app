@@ -114,7 +114,8 @@ class EmailVerificationPageState extends State<EmailVerificationPage>
                       ),
                       (route) => false);
                 } else {
-                  showToast('Verify your email to continue', context);
+                  showToast('Verify your email to continue', context,
+                      status: Status.info);
                 }
               },
             ),

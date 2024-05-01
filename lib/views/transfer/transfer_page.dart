@@ -164,7 +164,8 @@ class _TransferPageState extends State<TransferPage> {
                       recipientAccountController.text ==
                           widget.currentAccount.accountNumber) {
                     showToast(
-                        "Cannot transfer to your own bank account", context);
+                        "Cannot transfer to your own bank account", context,
+                        status: Status.warning);
                     return;
                   }
 

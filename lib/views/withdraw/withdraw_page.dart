@@ -83,7 +83,8 @@ class _WithdrawPageState extends State<WithdrawPage> {
                     if (newBalance < 0) {
                       showToast(
                           'You do not have sufficient balance to withdraw the amount',
-                          context);
+                          context,
+                          status: Status.warning);
                     } else {
                       await withdrawCash(
                         userId: authUser()?.uid ?? '',
