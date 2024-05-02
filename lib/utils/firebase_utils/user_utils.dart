@@ -84,8 +84,10 @@ Future<void> updateUser(
     });
   } catch (error) {
     // error handling
-    showToast('Oops! Something went wrong: $error', context,
-        status: Status.error);
+    if (context.mounted) {
+      showToast('Oops! Something went wrong: $error', context,
+          status: Status.error);
+    }
   }
 }
 
@@ -167,8 +169,10 @@ Future<void> reAuthUser(
       );
     }
   } catch (error) {
-    showToast('Oops! Something went wrong: $error', context,
-        status: Status.error);
+    if (context.mounted) {
+      showToast('Oops! Something went wrong: $error', context,
+          status: Status.error);
+    }
   }
 }
 
@@ -197,8 +201,10 @@ Future<UserModel> authUserInfo(BuildContext context) async {
       }
     } catch (error) {
       // error fetching user information
-      showToast('Error getting your information: $error', context,
-          status: Status.error);
+      if (context.mounted) {
+        showToast('Error getting your information: $error', context,
+            status: Status.error);
+      }
       return data;
     }
   } else {
@@ -225,8 +231,10 @@ Future<void> updateUserInfo(
       });
     } catch (error) {
       // error updating user profile
-      showToast('Error updating your profile: $error', context,
-          status: Status.error);
+      if (context.mounted) {
+        showToast('Error updating your profile: $error', context,
+            status: Status.error);
+      }
     }
   } else {
     // user is not authenticated
@@ -284,8 +292,10 @@ Future<void> closeUserAccount(BuildContext context) async {
       }
     } catch (error) {
       // error deleting user
-      showToast('Error closing your account: $error', context,
-          status: Status.error);
+      if (context.mounted) {
+        showToast('Error closing your account: $error', context,
+            status: Status.error);
+      }
     }
   } else {
     // user is not authenticated
@@ -301,8 +311,10 @@ Future<void> resetPassword(String email, BuildContext context) async {
     });
   } catch (error) {
     // error sending password reset email
-    showToast('Error sending password reset email: $error', context,
-        status: Status.error);
+    if (context.mounted) {
+      showToast('Error sending password reset email: $error', context,
+          status: Status.error);
+    }
   }
 }
 
@@ -329,8 +341,10 @@ Future<UserModel> getUserById(String userId, BuildContext context) async {
     }
   } catch (error) {
     // error fetching user information
-    showToast('Error getting your information: $error', context,
-        status: Status.error);
+    if (context.mounted) {
+      showToast('Error getting your information: $error', context,
+          status: Status.error);
+    }
     return data;
   }
 }

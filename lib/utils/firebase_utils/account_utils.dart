@@ -59,7 +59,10 @@ Future<void> depositCash(
     });
   } catch (error) {
     // error
-    showToast('Error crediting account: $error', context, status: Status.error);
+    if (context.mounted) {
+      showToast('Error crediting account: $error', context,
+          status: Status.error);
+    }
   }
 }
 
@@ -108,7 +111,10 @@ Future<void> withdrawCash(
     });
   } catch (error) {
     // error
-    showToast('Error withdrawing cash: $error', context, status: Status.error);
+    if (context.mounted) {
+      showToast('Error withdrawing cash: $error', context,
+          status: Status.error);
+    }
   }
 }
 
@@ -192,7 +198,10 @@ Future<void> transferCash(
     });
   } catch (error) {
     // error
-    showToast('Error transfering cash: $error', context, status: Status.error);
+    if (context.mounted) {
+      showToast('Error transfering cash: $error', context,
+          status: Status.error);
+    }
   }
 }
 
@@ -219,8 +228,10 @@ Future<AccountModel> fetchUserAccount({
     }
   } catch (error) {
     // error fetching transaction data
-    showToast("Error fetching recipient's info: $error", context,
-        status: Status.error);
+    if (context.mounted) {
+      showToast("Error fetching recipient's info: $error", context,
+          status: Status.error);
+    }
   }
   return recipient;
 }
@@ -242,8 +253,10 @@ Future<void> generateTransaction(
     });
   } catch (error) {
     // error generating transaction
-    showToast('Error generating transaction: $error', context,
-        status: Status.error);
+    if (context.mounted) {
+      showToast('Error generating transaction: $error', context,
+          status: Status.error);
+    }
   }
 }
 

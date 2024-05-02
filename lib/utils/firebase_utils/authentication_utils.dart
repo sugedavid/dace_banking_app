@@ -28,19 +28,28 @@ Future<void> registerUser(
   } on FirebaseAuthException catch (e) {
     // error handling
     if (e.code == 'weak-password') {
-      showToast('The password provided is too weak.', context,
-          status: Status.error);
+      if (context.mounted) {
+        showToast('The password provided is too weak.', context,
+            status: Status.error);
+      }
     } else if (e.code == 'email-already-in-use') {
-      showToast('The account already exists for that email.', context,
-          status: Status.error);
+      if (context.mounted) {
+        showToast('The account already exists for that email.', context,
+            status: Status.error);
+      }
     } else {
-      showToast(e.message ?? 'Oops! Something went wrong', context,
-          status: Status.error);
+      if (context.mounted) {
+        showToast(e.message ?? 'Oops! Something went wrong', context,
+            status: Status.error);
+      }
     }
   } catch (e) {
     // error handling
-    showToast('Oops! Could not register your account: ${e.toString()}', context,
-        status: Status.error);
+    if (context.mounted) {
+      showToast(
+          'Oops! Could not register your account: ${e.toString()}', context,
+          status: Status.error);
+    }
   }
 }
 
@@ -299,20 +308,31 @@ Future<void> verifyUserEmail(BuildContext context) async {
   } on FirebaseAuthException catch (e) {
     // firebase error handling
     if (e.code == 'user-not-found') {
-      showToast('No user found for that email.', context, status: Status.error);
+      if (context.mounted) {
+        showToast('No user found for that email.', context,
+            status: Status.error);
+      }
     } else if (e.code == 'wrong-password') {
-      showToast('Wrong password provided for that user.', context,
-          status: Status.error);
+      if (context.mounted) {
+        showToast('Wrong password provided for that user.', context,
+            status: Status.error);
+      }
     } else if (e.code == 'INVALID_LOGIN_CREDENTIALS') {
-      showToast('Invalid login credentials', context, status: Status.error);
+      if (context.mounted) {
+        showToast('Invalid login credentials', context, status: Status.error);
+      }
     } else {
-      showToast(e.message ?? 'Oops! Something went wrong', context,
-          status: Status.error);
+      if (context.mounted) {
+        showToast(e.message ?? 'Oops! Something went wrong', context,
+            status: Status.error);
+      }
     }
   } catch (e) {
     // error handling
-    showToast('Oops! Something went wrong: ${e.toString()}', context,
-        status: Status.error);
+    if (context.mounted) {
+      showToast('Oops! Something went wrong: ${e.toString()}', context,
+          status: Status.error);
+    }
   }
 }
 

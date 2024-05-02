@@ -35,8 +35,10 @@ Future<List<TransactionModel>> fetchTransactions(
     }
   } catch (error) {
     // error fetching transaction data
-    showToast('Error fetching transaction data: $error', context,
-        status: Status.error);
+    if (context.mounted) {
+      showToast('Error fetching transaction data: $error', context,
+          status: Status.error);
+    }
   }
   transactionList.sort((a, b) => b.createdAt.compareTo(a.createdAt));
   return transactionList;
