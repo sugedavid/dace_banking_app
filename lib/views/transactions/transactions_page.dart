@@ -95,7 +95,9 @@ class TransactionsPage extends StatelessWidget {
           }
           // success state
           else {
-            final transactionData = snapshot.data as List<TransactionModel>;
+            List<TransactionModel> transactionData =
+                snapshot.data as List<TransactionModel>;
+            transactionData = transactionData.reversed.toList();
             return transactionData.isEmpty
                 ? const Center(
                     child: ListTile(

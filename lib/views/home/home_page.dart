@@ -86,7 +86,7 @@ class _HomePageState extends State<HomePage> {
                             padding: const EdgeInsets.all(10.0),
                             child: const Icon(
                               Icons.upload_outlined,
-                              size: 32.0,
+                              size: 26.0,
                               color: Colors.green,
                             ),
                           ),
@@ -119,7 +119,7 @@ class _HomePageState extends State<HomePage> {
                             padding: const EdgeInsets.all(10.0),
                             child: const Icon(
                               Icons.download_outlined,
-                              size: 32.0,
+                              size: 26.0,
                               color: Colors.redAccent,
                             ),
                           ),
@@ -153,7 +153,7 @@ class _HomePageState extends State<HomePage> {
                             padding: const EdgeInsets.all(10.0),
                             child: const Icon(
                               Icons.swap_horiz_outlined,
-                              size: 32.0,
+                              size: 26.0,
                               color: Colors.blue,
                             ),
                           ),
@@ -187,7 +187,7 @@ class _HomePageState extends State<HomePage> {
                             padding: const EdgeInsets.all(10.0),
                             child: const Icon(
                               Icons.account_balance_outlined,
-                              size: 32.0,
+                              size: 26.0,
                               color: Colors.orange,
                             ),
                           ),
@@ -212,7 +212,7 @@ class _HomePageState extends State<HomePage> {
                             padding: const EdgeInsets.all(10.0),
                             child: const Icon(
                               Icons.book_outlined,
-                              size: 32.0,
+                              size: 26.0,
                               color: Colors.purple,
                             ),
                           ),
@@ -230,7 +230,7 @@ class _HomePageState extends State<HomePage> {
                             padding: const EdgeInsets.all(10.0),
                             child: const Icon(
                               Icons.credit_card_outlined,
-                              size: 32.0,
+                              size: 26.0,
                               color: Colors.blueGrey,
                             ),
                           ),
@@ -248,7 +248,7 @@ class _HomePageState extends State<HomePage> {
                             padding: const EdgeInsets.all(10.0),
                             child: const Icon(
                               Icons.replay_outlined,
-                              size: 32.0,
+                              size: 26.0,
                               color: Colors.teal,
                             ),
                           ),

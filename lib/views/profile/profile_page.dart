@@ -86,7 +86,10 @@ class ProfilePageState extends State<ProfilePage> {
 
                 // two factor
                 ListTile(
-                  onTap: () => showReAuthDialog(context),
+                  onTap: () => widget.userData.phoneEnrolled
+                      ? showToast('Two factor authentication enabled', context,
+                          status: Status.info)
+                      : showReAuthDialog(context),
                   leading: const Icon(
                     Icons.phone_locked_outlined,
                     size: 20,
@@ -110,7 +113,8 @@ class ProfilePageState extends State<ProfilePage> {
                       side: BorderSide.none,
                       onPressed: () async {
                         if (widget.userData.phoneEnrolled) {
-                          showToast('Two factor enabled', context,
+                          showToast(
+                              'Two factor authentication enabled', context,
                               status: Status.info);
                         } else {
                           showReAuthDialog(context);
