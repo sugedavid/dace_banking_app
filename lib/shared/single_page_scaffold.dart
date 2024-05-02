@@ -15,24 +15,6 @@ class SinglePageScaffold extends StatefulWidget {
 
 class _SinglePageScaffoldState extends State<SinglePageScaffold>
     with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _animation;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 700));
-    _animation = Tween<double>(begin: 0, end: 1).animate(_controller);
-    _controller.forward();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,18 +27,15 @@ class _SinglePageScaffoldState extends State<SinglePageScaffold>
       ),
       body: SingleChildScrollView(
         child: Center(
-          child: FadeTransition(
-            opacity: _animation,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 20),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surface,
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                padding: const EdgeInsets.all(24.0),
-                child: widget.child,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 20),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.surface,
+                borderRadius: BorderRadius.circular(10.0),
               ),
+              padding: const EdgeInsets.all(24.0),
+              child: widget.child,
             ),
           ),
         ),
