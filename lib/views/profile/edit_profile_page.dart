@@ -151,7 +151,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     lastNameController.text,
                     context,
                   );
-                  if (mounted) Navigator.of(context).pop(true);
+                  if (context.mounted) {
+                    Navigator.of(context).pop(true);
+                  }
                 }
               },
             ),
