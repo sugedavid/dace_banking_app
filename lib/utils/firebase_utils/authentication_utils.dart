@@ -81,16 +81,27 @@ Future<void> logInUser(
   } on FirebaseAuthException catch (e) {
     // firebase error handling
     if (e.code == 'user-not-found') {
-      if (context.mounted) showToast('No user found for that email.', context);
+      if (context.mounted) {
+        showToast('No user found for that email.', context,
+            status: Status.error);
+      }
     } else if (e.code == 'wrong-password') {
       if (context.mounted) {
-        showToast('Wrong password provided for that user.', context);
+        {
+          showToast('Wrong password provided for that user.', context,
+              status: Status.error);
+        }
       }
     } else if (e.code == 'INVALID_LOGIN_CREDENTIALS') {
-      if (context.mounted) showToast('Invalid login credentials', context);
+      if (context.mounted) {
+        showToast('Invalid login credentials', context, status: Status.error);
+      }
     } else {
       if (context.mounted) {
-        showToast(e.message ?? 'Oops! Something went wrong', context);
+        {
+          showToast(e.message ?? 'Oops! Something went wrong', context,
+              status: Status.error);
+        }
       }
     }
   } catch (e) {

@@ -100,9 +100,9 @@ Future<String> generateUniqueAccountNumber() async {
         List<int>.generate(10, (_) => rng.nextInt(10)); // for 10 digits
     String accountNumber = digits.join();
 
-    // query all accounts subcollections of all users for the generated account number
+    // query all bankAccounts subcollections of all users for the generated account number
     var querySnapshot = await dbInstance
-        .collectionGroup('accounts')
+        .collection('bankAccounts')
         .where('accountNumber', isEqualTo: accountNumber)
         .get();
 
@@ -124,9 +124,9 @@ Future<String> generateSortCode() async {
     }
     String sortCode = parts.join('-');
 
-    // query all accounts subcollections of all users for the generated sort code
+    // query all bankAccounts subcollections of all users for the generated sort code
     var querySnapshot = await dbInstance
-        .collectionGroup('accounts')
+        .collection('bankAccounts')
         .where('sortCode', isEqualTo: sortCode)
         .get();
 
@@ -263,7 +263,7 @@ Future<void> closeUserAccount(BuildContext context) async {
       final userRef =
           FirebaseFirestore.instance.collection('users').doc(user.uid);
       // get a reference to all documents in the subcollection
-      final accountsQuery = userRef.collection('accounts');
+      final accountsQuery = userRef.collection('bankAccounts');
 
       // delete each document individually
       await accountsQuery.get().then((querySnapshot) async {
@@ -307,7 +307,7 @@ Future<void> closeUserAccount(BuildContext context) async {
 Future<void> resetPassword(String email, BuildContext context) async {
   try {
     await FirebaseAuth.instance.sendPasswordResetEmail(email: email).then((_) {
-      showToast('Password reset email sent!', context);
+      showToast('Password reset email sent', context, status: Status.success);
     });
   } catch (error) {
     // error sending password reset email
