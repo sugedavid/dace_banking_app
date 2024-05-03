@@ -1,4 +1,5 @@
 import 'package:banking_app/models/user.dart';
+import 'package:banking_app/shared/ba_dialog.dart';
 import 'package:banking_app/shared/ba_toast_notification.dart';
 import 'package:banking_app/shared/main_scaffold.dart';
 import 'package:banking_app/utils/firebase_utils/user_utils.dart';
@@ -75,7 +76,6 @@ Future<void> logInUser(
   } on FirebaseAuthMultiFactorException catch (e) {
     // verify second factor
     if (context.mounted) {
-      showToast('${e.message}', context);
       verifySecondFactor(e, user, context);
     }
   } on FirebaseAuthException catch (e) {
@@ -129,13 +129,19 @@ Future<void> handlePhoneEnrollment(
   } else {
     // proceed with phone number enrollment
     if (context.mounted) {
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(
-            builder: (context) => PhoneEnrollmentPage(
-              userModel: userModel,
-            ),
-          ),
-          (route) => false);
+      BaDialog.showBaDialog(
+          context: context,
+          title: 'Two Factor Authentication',
+          content: PhoneEnrollmentPage(
+            userModel: userModel,
+          ));
+      // Navigator.of(context).pushAndRemoveUntil(
+      //     MaterialPageRoute(
+      //       builder: (context) => PhoneEnrollmentPage(
+      //         userModel: userModel,
+      //       ),
+      //     ),
+      //     (route) => false);
     }
   }
 }

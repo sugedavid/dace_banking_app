@@ -61,7 +61,7 @@ class _BADropdownButtonState extends State<BADropdownButton> {
 
         // dropdown
         SizedBox(
-          width: 395,
+          width: double.infinity,
           child: DropdownButtonHideUnderline(
             child: DropdownButtonFormField<String>(
               isExpanded: true,

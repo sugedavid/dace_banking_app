@@ -1,8 +1,10 @@
 import 'package:banking_app/models/account.dart';
 import 'package:banking_app/utils/assets.dart';
+import 'package:banking_app/utils/responsiveness.dart';
 import 'package:banking_app/views/email_verification/email_verification_page.dart';
 import 'package:banking_app/views/transactions/transactions_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../models/user.dart';
@@ -23,6 +25,8 @@ class _MainScaffoldState extends State<MainScaffold> {
   int _selectedIndex = 0;
   static List<Widget> _widgetOptions = [];
 
+  NavigationRailLabelType labelType = NavigationRailLabelType.all;
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -30,7 +34,6 @@ class _MainScaffoldState extends State<MainScaffold> {
   }
 
   UserModel userData = UserModel.toEmpty();
-
   bool _isLoading = false;
 
   @override
@@ -133,33 +136,143 @@ class _MainScaffoldState extends State<MainScaffold> {
           ? const LinearProgressIndicator(
               color: AppColors.primaryColor,
             )
-          : Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 12.0, vertical: 20.0),
-              child: _widgetOptions.elementAt(_selectedIndex),
+          : Row(
+              children: [
+                // master
+                if (kIsWeb && isLargeScreen(context)) ...{
+                  NavigationRail(
+                      selectedIndex: _selectedIndex,
+                      onDestinationSelected: (int index) {
+                        setState(() {
+                          _selectedIndex = index;
+                        });
+                      },
+                      labelType: NavigationRailLabelType.all,
+                      destinations: <NavigationRailDestination>[
+                        NavigationRailDestination(
+                          icon: Icon(
+                            _selectedIndex == 0
+                                ? Icons.home
+                                : Icons.home_outlined,
+                            color: _selectedIndex == 0
+                                ? AppColors.primaryColor
+                                : Colors.blueGrey,
+                          ),
+                          label: const Text(
+                            'Home',
+                            style: TextStyle(
+                              color: Colors.blueGrey,
+                            ),
+                          ),
+                        ),
+                        NavigationRailDestination(
+                          icon: Icon(
+                            _selectedIndex == 1
+                                ? Icons.history
+                                : Icons.history_outlined,
+                            color: _selectedIndex == 1
+                                ? AppColors.primaryColor
+                                : Colors.blueGrey,
+                          ),
+                          label: const Text(
+                            'Transactions',
+                            style: TextStyle(
+                              color: Colors.blueGrey,
+                            ),
+                          ),
+                        ),
+                        NavigationRailDestination(
+                          icon: Icon(
+                            _selectedIndex == 2
+                                ? Icons.settings
+                                : Icons.settings_outlined,
+                            color: _selectedIndex == 2
+                                ? AppColors.primaryColor
+                                : Colors.blueGrey,
+                          ),
+                          label: const Text(
+                            'Settings',
+                            style: TextStyle(
+                              color: Colors.blueGrey,
+                            ),
+                          ),
+                        ),
+                      ]),
+                },
+
+                // detail
+                Expanded(
+                  child: Container(
+                    alignment: kIsWeb && isLargeScreen(context)
+                        ? Alignment.center
+                        : null,
+                    child: SizedBox(
+                      width: kIsWeb ? 400 : null,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12.0, vertical: 20.0),
+                        child: _widgetOptions.elementAt(_selectedIndex),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(_selectedIndex == 0 ? Icons.home : Icons.home_outlined),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              _selectedIndex == 1 ? Icons.history : Icons.history_outlined,
+      bottomNavigationBar: kIsWeb && isLargeScreen(context)
+          ? null
+          : NavigationBarTheme(
+              data: NavigationBarThemeData(
+                labelTextStyle: MaterialStateProperty.resolveWith<TextStyle?>(
+                  (states) {
+                    // Define the text style for different states
+                    return TextStyle(
+                        color: states.contains(MaterialState.selected)
+                            ? AppColors.primaryColor
+                            : Colors.blueGrey,
+                        fontWeight: states.contains(MaterialState.selected)
+                            ? FontWeight.w600
+                            : FontWeight.w400);
+                  },
+                ),
+              ),
+              child: NavigationBar(
+                destinations: <Widget>[
+                  NavigationDestination(
+                    icon: Icon(
+                      _selectedIndex == 0 ? Icons.home : Icons.home_outlined,
+                      color: _selectedIndex == 0
+                          ? AppColors.primaryColor
+                          : Colors.blueGrey,
+                    ),
+                    label: 'Home',
+                  ),
+                  NavigationDestination(
+                    icon: Icon(
+                      _selectedIndex == 1
+                          ? Icons.history
+                          : Icons.history_outlined,
+                      color: _selectedIndex == 1
+                          ? AppColors.primaryColor
+                          : Colors.blueGrey,
+                    ),
+                    label: 'Transactions',
+                  ),
+                  NavigationDestination(
+                    icon: Icon(
+                      _selectedIndex == 2
+                          ? Icons.settings
+                          : Icons.settings_outlined,
+                      color: _selectedIndex == 2
+                          ? AppColors.primaryColor
+                          : Colors.blueGrey,
+                    ),
+                    label: 'Settings',
+                  ),
+                ],
+                selectedIndex: _selectedIndex,
+                onDestinationSelected: _onItemTapped,
+              ),
             ),
-            label: 'Transactions',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-                _selectedIndex == 2 ? Icons.settings : Icons.settings_outlined),
-            label: 'Settings',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: AppColors.primaryColor,
-        onTap: _onItemTapped,
-      ),
     );
   }
 }

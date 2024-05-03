@@ -31,7 +31,7 @@ class BAPrimaryButtonState extends State<BAPrimaryButton> {
     }
 
     return SizedBox(
-      width: 395,
+      width: double.infinity,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: widget.backgroundColor,
