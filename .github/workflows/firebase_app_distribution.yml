@@ -1,4 +1,4 @@
-name: Build & upload to Firebase App Distribution
+name: Build & Upload 🤖 apk to 🔥 Firebase App Distribution
 
 on:
   push:
