@@ -49,6 +49,7 @@ class ProfilePageState extends State<ProfilePage> {
                   leading: const Icon(
                     Icons.person_outline,
                     size: 20,
+                    color: Colors.blueGrey,
                   ),
                   title: Text(
                       '${widget.userData.firstName} ${widget.userData.lastName}'),
@@ -60,6 +61,7 @@ class ProfilePageState extends State<ProfilePage> {
                   leading: const Icon(
                     Icons.email_outlined,
                     size: 20,
+                    color: Colors.blueGrey,
                   ),
                   title: Text(widget.userData.email),
                   trailing: ActionChip(
@@ -87,16 +89,21 @@ class ProfilePageState extends State<ProfilePage> {
                 // two factor
                 ListTile(
                   onTap: () => widget.userData.phoneEnrolled
-                      ? showToast('Two factor authentication enabled', context,
-                          status: Status.info)
+                      ? null
                       : showReAuthDialog(context),
-                  leading: const Icon(
-                    Icons.phone_locked_outlined,
+                  leading: Icon(
+                    !widget.userData.phoneEnrolled
+                        ? Icons.phone_outlined
+                        : Icons.phone_locked_outlined,
                     size: 20,
+                    color: Colors.blueGrey,
                   ),
-                  title: Text(!widget.userData.phoneEnrolled
-                      ? 'Setup two factor'
-                      : widget.userData.phoneNumber),
+                  title: Text(
+                    !widget.userData.phoneEnrolled
+                        ? 'Setup two factor'
+                        : widget.userData.phoneNumber,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                   trailing: ActionChip(
                       label: Text(widget.userData.phoneEnrolled
                           ? 'Two factor Enabled'
@@ -152,6 +159,7 @@ class ProfilePageState extends State<ProfilePage> {
                   leading: const Icon(
                     Icons.send_to_mobile_outlined,
                     size: 20,
+                    color: Colors.blueGrey,
                   ),
                   title: const Text('Reset Password'),
                 ),
@@ -174,6 +182,7 @@ class ProfilePageState extends State<ProfilePage> {
                   leading: const Icon(
                     Icons.info_outlined,
                     size: 20,
+                    color: Colors.blueGrey,
                   ),
                   title: const Text('About'),
                 ),

@@ -136,7 +136,7 @@ class BATextField extends StatelessWidget {
 
         // text field
         SizedBox(
-          width: 395,
+          width: double.infinity,
           child: TextFormField(
             enabled: enabled,
             readOnly: readOnly!,

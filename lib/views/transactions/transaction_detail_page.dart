@@ -31,7 +31,10 @@ class _TransactionDetailPageState extends State<TransactionDetailPage> {
   void fetchUserData() async {
     if (widget.transaction.transactionType == 'Transfer' &&
         widget.transaction.recipient != null) {
-      senderData = await getUserById(widget.transaction.userId, context);
+      UserModel user = await getUserById(widget.transaction.userId, context);
+      setState(() {
+        senderData = user;
+      });
     }
   }
 

@@ -138,7 +138,8 @@ class TransactionsPage extends StatelessWidget {
                           leading: trailingIcon(transactionType),
                           title: Text(
                             transactionType,
-                            style: const TextStyle(fontWeight: FontWeight.w500),
+                            style: const TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.w500),
                           ),
                           subtitle: Text(
                             formatDateString(transaction.createdAt),

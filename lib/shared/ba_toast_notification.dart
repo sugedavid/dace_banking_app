@@ -17,7 +17,7 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showToast(
 Color getColorForStatus(Status status) {
   switch (status) {
     case Status.success:
-      return Colors.green;
+      return Colors.green.shade600;
     case Status.error:
       return Colors.red;
     case Status.warning:

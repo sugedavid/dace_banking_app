@@ -112,6 +112,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       child: Form(
         key: formKey,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             AppSpacing.medium,
 
