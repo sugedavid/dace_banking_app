@@ -85,6 +85,16 @@ class BATextField extends StatelessWidget {
       };
     }
 
+    // streetAddress
+    else if (textInputType == TextInputType.streetAddress) {
+      return (value) {
+        if (value == null || value.isEmpty) {
+          return 'Please enter ${labelText.toLowerCase()}';
+        }
+        return null;
+      };
+    }
+
     // custom validation
     else if (validator != null) {
       return (value) {

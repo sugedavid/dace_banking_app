@@ -1,5 +1,6 @@
 import 'package:banking_app/models/user.dart';
 import 'package:banking_app/views/accounts/accounts_page.dart';
+import 'package:banking_app/views/chequebooks/chequebooks_page.dart';
 import 'package:banking_app/views/deposit/deposit_page.dart';
 import 'package:banking_app/views/home/components/account_card.dart';
 import 'package:banking_app/views/home/components/service_card.dart';
@@ -216,8 +217,16 @@ class _HomePageState extends State<HomePage> {
                               color: Colors.purple,
                             ),
                           ),
-                          title: 'Checkbooks',
-                          onPressed: () => {},
+                          title: 'Chequebooks',
+                          onPressed: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => CheckBooksPage(
+                                userData: widget.userData,
+                                currentAccount: accountData,
+                                bankAccounts: bankAccounts,
+                              ),
+                            ),
+                          ),
                         ),
 
                         // debit card
