@@ -5,11 +5,18 @@ import 'package:flutter/material.dart';
 import '../utils/colors.dart';
 
 class SinglePageScaffold extends StatefulWidget {
-  const SinglePageScaffold(
-      {super.key, required this.title, required this.child});
+  const SinglePageScaffold({
+    super.key,
+    required this.title,
+    required this.child,
+    this.actions,
+    this.floatingActionButton,
+  });
 
   final String title;
+  final List<Widget>? actions;
   final Widget child;
+  final Widget? floatingActionButton;
 
   @override
   State<SinglePageScaffold> createState() => _SinglePageScaffoldState();
@@ -26,6 +33,7 @@ class _SinglePageScaffoldState extends State<SinglePageScaffold>
           widget.title,
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
+        actions: widget.actions,
       ),
       body: Container(
         alignment: kIsWeb && isLargeScreen(context) ? Alignment.center : null,
@@ -44,6 +52,7 @@ class _SinglePageScaffoldState extends State<SinglePageScaffold>
           ),
         ),
       ),
+      floatingActionButton: widget.floatingActionButton,
     );
   }
 }
