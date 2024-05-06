@@ -262,7 +262,24 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                           title: 'Recurring Payments',
-                          onPressed: () {},
+                          onPressed: () => Navigator.of(context)
+                              .push(
+                            MaterialPageRoute(
+                              builder: (context) => TransferPage(
+                                userData: widget.userData,
+                                currentAccount: accountData,
+                                bankAccounts: bankAccounts,
+                                isRecurring: true,
+                              ),
+                            ),
+                          )
+                              .then((value) {
+                            // This function executes on pop back
+                            setState(() {
+                              fetchDataFuture = fetchBankAccountsByUserId(
+                                  widget.userData.userId);
+                            });
+                          }),
                         ),
                       ],
                     ),

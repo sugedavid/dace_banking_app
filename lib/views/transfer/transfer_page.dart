@@ -1,12 +1,15 @@
 import 'package:banking_app/models/account.dart';
 import 'package:banking_app/models/user.dart';
+import 'package:banking_app/shared/ba_date_time_picker.dart';
 import 'package:banking_app/shared/ba_dropdown_button.dart';
 import 'package:banking_app/shared/ba_primary_button.dart';
 import 'package:banking_app/shared/ba_text_field.dart';
 import 'package:banking_app/shared/single_page_scaffold.dart';
+import 'package:banking_app/utils/colors.dart';
 import 'package:banking_app/utils/firebase_utils/account_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 
 import '../../shared/ba_toast_notification.dart';
 import '../../utils/firebase_utils/user_utils.dart';
@@ -18,11 +21,13 @@ class TransferPage extends StatefulWidget {
     required this.userData,
     required this.currentAccount,
     required this.bankAccounts,
+    this.isRecurring = false,
   });
 
   final UserModel userData;
   final AccountModel currentAccount;
   final List<AccountModel> bankAccounts;
+  final bool isRecurring;
 
   @override
   State<TransferPage> createState() => _TransferPageState();
@@ -39,6 +44,19 @@ class _TransferPageState extends State<TransferPage> {
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
   final emailController = TextEditingController();
+  final recurringController = TextEditingController();
+
+  bool isRecurring = false;
+  DateTime dateTime = DateTime.now();
+  String date = '';
+  TimeOfDay timeOfDay = TimeOfDay.now();
+  String time = '';
+
+  @override
+  void initState() {
+    super.initState();
+    isRecurring = widget.isRecurring;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +66,7 @@ class _TransferPageState extends State<TransferPage> {
       child: Form(
         key: formKey,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             AppSpacing.medium,
 
@@ -102,7 +121,7 @@ class _TransferPageState extends State<TransferPage> {
               children: [
                 Expanded(
                   child: BATextField(
-                    labelText: 'First Name',
+                    labelText: 'First name',
                     controller: firstNameController,
                     textInputType: TextInputType.name,
                   ),
@@ -112,7 +131,7 @@ class _TransferPageState extends State<TransferPage> {
                 ),
                 Expanded(
                   child: BATextField(
-                    labelText: 'Last Name',
+                    labelText: 'Last name',
                     controller: lastNameController,
                     textInputType: TextInputType.name,
                   ),
@@ -144,6 +163,89 @@ class _TransferPageState extends State<TransferPage> {
               ],
             ),
 
+            // recurring
+            const Text(
+              'Recurring payment',
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+                color: AppColors.primaryColor,
+              ),
+            ),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Switch(
+                  value: isRecurring,
+                  // activeColor: Colors.red,
+                  onChanged: (bool value) {
+                    setState(() {
+                      isRecurring = value;
+                    });
+                  },
+                ),
+                if (isRecurring) ...{
+                  const Text('on'),
+                  // date picker
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      backgroundColor: AppColors.backgroundColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4.0),
+                      ),
+                    ),
+                    child: Text(
+                      date.isEmpty ? 'Select Day' : date,
+                      style: TextStyle(
+                        color: date.isEmpty ? Colors.grey : Colors.black,
+                      ),
+                    ),
+                    onPressed: () => BaDateTimePicker.showBaDatePicker(
+                      context: context,
+                      title: 'Date',
+                      onOk: (val) {
+                        setState(() {
+                          dateTime = val;
+                          date = DateFormat('dd-MM-yyyy').format(val);
+                        });
+                      },
+                    ),
+                  ),
+
+                  if (date.isNotEmpty) const Text('at'),
+
+                  // time picker
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      backgroundColor: AppColors.backgroundColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4.0),
+                      ),
+                    ),
+                    child: Text(
+                      time.isEmpty ? 'Select Time' : time,
+                      style: TextStyle(
+                        color: time.isEmpty ? Colors.grey : Colors.black,
+                      ),
+                    ),
+                    onPressed: () => BaDateTimePicker.showBaTimePicker(
+                      context: context,
+                      title: 'Time',
+                      onOk: (val) {
+                        setState(() {
+                          timeOfDay = val;
+                          time = val.format(context);
+                        });
+                      },
+                    ),
+                  ),
+                },
+              ],
+            ),
+            AppSpacing.small,
+
+            AppSpacing.small,
+
             // email
             BATextField(
               labelText: 'Email',
@@ -164,12 +266,28 @@ class _TransferPageState extends State<TransferPage> {
                       recipientAccountController.text ==
                           widget.currentAccount.accountNumber) {
                     showToast(
-                        "Cannot transfer to your own bank account", context,
+                        'Cannot transfer to your own bank account', context,
                         status: Status.warning);
                     return;
                   }
 
                   if (formKey.currentState!.validate()) {
+                    // check recurring dates
+                    if (date.isEmpty || time.isEmpty) {
+                      showToast(
+                          'Select date and time to set up recurring payments',
+                          context,
+                          status: Status.warning);
+                      return;
+                    }
+
+                    final combinedDateTime = DateTime(
+                        dateTime.year,
+                        dateTime.month,
+                        dateTime.day,
+                        timeOfDay.hour,
+                        timeOfDay.minute);
+
                     final currentBalance =
                         double.parse(widget.currentAccount.amount);
                     final amountToSubtract =
@@ -186,6 +304,7 @@ class _TransferPageState extends State<TransferPage> {
                       recipientAccountNumber: recipientAccountController.text,
                       recipientFirstName: firstNameController.text,
                       recipientLastName: lastNameController.text,
+                      recurring: isRecurring ? combinedDateTime : null,
                       context: context,
                     );
                   }

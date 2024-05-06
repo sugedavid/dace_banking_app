@@ -36,7 +36,6 @@ class _BADropdownButtonState extends State<BADropdownButton> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // label
-        // label
         if (widget.labelText.isNotEmpty) ...{
           Row(
             children: [

@@ -1,4 +1,7 @@
+import 'package:banking_app/shared/ba_dialog.dart';
+import 'package:banking_app/shared/ba_divider.dart';
 import 'package:banking_app/shared/single_page_scaffold.dart';
+import 'package:banking_app/utils/firebase_utils/user_utils.dart';
 import 'package:banking_app/views/home/components/account_card.dart';
 import 'package:flutter/material.dart';
 
@@ -133,6 +136,53 @@ class _AccountsPageState extends State<AccountsPage> {
               style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
             ),
           ),
+
+          // status
+          ListTile(
+            dense: true,
+            contentPadding: EdgeInsets.zero,
+            title: const Text(
+              'Status',
+              style: TextStyle(
+                  color: Colors.blueGrey,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w400),
+            ),
+            trailing: Text(
+              widget.accountModel.status,
+              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+            ),
+          ),
+
+          // close account
+          if (widget.accountModel.status != 'Closed') ...{
+            AppSpacing.medium,
+            const BADivider(),
+            AppSpacing.small,
+            TextButton(
+              onPressed: () {
+                BaDialog.showBaDialog(
+                  context: context,
+                  title: 'Close Account',
+                  content: const Text(
+                      'Are you sure you want to close your bank account? This action cannot be undone.'),
+                  okText: 'ClOSE ACCOUNT',
+                  cancelText: 'CANCEL',
+                  onOk: () async {
+                    Navigator.pop(context);
+                    toggleLoading();
+                    await closeBankAccount(widget.accountModel, context);
+                    toggleLoading();
+                  },
+                  onCancel: () => Navigator.pop(context),
+                );
+              },
+              child: const Text(
+                'Close Account',
+                style: TextStyle(color: Colors.red, fontSize: 16),
+              ),
+            ),
+          },
         ],
       ),
     );

@@ -10,6 +10,7 @@ class TransactionModel {
   final String accountId;
   final String accountNumber;
   final RecipientModel? recipient;
+  final String? recurring;
   final String createdAt;
   final String amount;
 
@@ -23,6 +24,7 @@ class TransactionModel {
     required this.accountId,
     required this.accountNumber,
     this.recipient,
+    this.recurring,
     required this.createdAt,
     required this.amount,
   });
@@ -42,6 +44,7 @@ class TransactionModel {
       accountId: data['accountId'] ?? '',
       accountNumber: data['accountNumber'] ?? '',
       recipient: recipient,
+      recurring: data['recurring'] ?? '',
       createdAt: data['createdAt'] ?? '',
       amount: data['amount'] ?? '',
     );
@@ -58,6 +61,7 @@ class TransactionModel {
       'accountId': accountId,
       'accountNumber': accountNumber,
       'recipient': recipient?.toMap(),
+      'recurring': recurring,
       'createdAt': createdAt,
       'amount': amount,
     };
@@ -75,6 +79,7 @@ class TransactionModel {
       accountId: '',
       accountNumber: '',
       recipient: RecipientModel.toEmpty(),
+      recurring: '',
       createdAt: '',
       amount: '',
     );

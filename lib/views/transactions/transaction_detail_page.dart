@@ -1,6 +1,8 @@
 import 'package:banking_app/models/recipient.dart';
 import 'package:banking_app/models/user.dart';
+import 'package:banking_app/shared/ba_dialog.dart';
 import 'package:banking_app/shared/single_page_scaffold.dart';
+import 'package:banking_app/utils/firebase_utils/account_utils.dart';
 import 'package:banking_app/utils/spacing.dart';
 import 'package:flutter/material.dart';
 
@@ -42,6 +44,8 @@ class _TransactionDetailPageState extends State<TransactionDetailPage> {
   Widget build(BuildContext context) {
     final transactionAmount = widget.transaction.transactionType == 'Deposit' ||
             (widget.transaction.transactionType == 'Transfer' &&
+                widget.transaction.recipient?.userId == widget.user.userId) ||
+            (widget.transaction.transactionType == 'Recurring Payment' &&
                 widget.transaction.recipient?.userId == widget.user.userId)
         ? '+£${widget.transaction.amount}'
         : '-£${widget.transaction.amount}';
@@ -62,6 +66,10 @@ class _TransactionDetailPageState extends State<TransactionDetailPage> {
                 fontWeight: FontWeight.w500,
                 color: widget.transaction.transactionType == 'Deposit' ||
                         (widget.transaction.transactionType == 'Transfer' &&
+                            widget.transaction.recipient?.userId ==
+                                widget.user.userId) ||
+                        (widget.transaction.transactionType ==
+                                'Recurring Payment' &&
                             widget.transaction.recipient?.userId ==
                                 widget.user.userId)
                     ? Colors.green
@@ -119,6 +127,27 @@ class _TransactionDetailPageState extends State<TransactionDetailPage> {
               style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
             ),
           ),
+
+          // recurring
+          if (widget.transaction.recurring != null &&
+              widget.transaction.recurring!.isNotEmpty) ...{
+            ListTile(
+              dense: true,
+              contentPadding: EdgeInsets.zero,
+              title: const Text(
+                'Next payment',
+                style: TextStyle(
+                    color: Colors.blueGrey,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w400),
+              ),
+              trailing: Text(
+                formatDateString(widget.transaction.recurring!),
+                style:
+                    const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+              ),
+            ),
+          },
 
           // ref
           ListTile(
@@ -238,6 +267,34 @@ class _TransactionDetailPageState extends State<TransactionDetailPage> {
                 style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
               ),
             ),
+
+            // stop recurring payment
+            if (widget.transaction.recurring != null &&
+                widget.transaction.recurring!.isNotEmpty &&
+                widget.transaction.transactionStatus != 'Cancelled')
+              // close account
+              TextButton(
+                onPressed: () {
+                  BaDialog.showBaDialog(
+                    context: context,
+                    title: 'Cancel Payment',
+                    content: const Text(
+                        'Are you sure you want to stop this recurring payment?'),
+                    okText: 'CANCEL PAYMENT',
+                    cancelText: 'CANCEL',
+                    onOk: () async {
+                      Navigator.pop(context);
+                      await cancelRecurringTransfer(
+                          transaction: widget.transaction, context: context);
+                    },
+                    onCancel: () => Navigator.pop(context),
+                  );
+                },
+                child: const Text(
+                  'Cancel recurring payment',
+                  style: TextStyle(color: Colors.red, fontSize: 16),
+                ),
+              ),
           }
         ],
       ),

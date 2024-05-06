@@ -52,20 +52,20 @@ Future<void> updateUser(
         .then((value) {
       String createdAt = DateFormat('yyyy-MM-dd HH:mm').format(DateTime.now());
       final account = AccountModel(
-        accountId: bankAccountsCollectionId,
-        amount: '0.00', // initial balance
-        accountNumber: accountNumber,
-        accountType: accountType,
-        createdAt: createdAt,
-        updatedAt: createdAt,
-        sortCode: sortCode,
-        currency: '£',
-        firstName: firstName,
-        lastName: lastName,
-        email: credential.user?.email,
-        userId: credential.user?.uid ?? '',
-        bankName: 'DACE',
-      );
+          accountId: bankAccountsCollectionId,
+          amount: '0.00', // initial balance
+          accountNumber: accountNumber,
+          accountType: accountType,
+          createdAt: createdAt,
+          updatedAt: createdAt,
+          sortCode: sortCode,
+          currency: '£',
+          firstName: firstName,
+          lastName: lastName,
+          email: credential.user?.email,
+          userId: credential.user?.uid ?? '',
+          bankName: 'DACE',
+          status: 'Active');
 
       // add a new document to the accounts subcollection
       bankAccountsCollectionRef.set(account.toMap()).then((value) {
@@ -272,14 +272,10 @@ Future<void> closeUserAccount(BuildContext context) async {
         }
       });
       // delete the user document
-      await dbInstance
-          .collection('users')
-          .doc(user.uid)
-          .delete()
-          .then((value) async {
-        // delete the user account
-        await user.delete();
-      });
+      await dbInstance.collection('users').doc(user.uid).delete();
+
+      // delete the user account
+      await user.delete();
 
       if (context.mounted) {
         showToast('Account closed successfully!', context,
@@ -290,6 +286,39 @@ Future<void> closeUserAccount(BuildContext context) async {
           ),
         );
       }
+    } catch (error) {
+      // error deleting user
+      if (context.mounted) {
+        showToast('Error closing your account: $error', context,
+            status: Status.error);
+      }
+    }
+  } else {
+    // user is not authenticated
+    showToast('You are not authenticated', context, status: Status.error);
+  }
+}
+
+// close bank account
+Future<void> closeBankAccount(
+    AccountModel account, BuildContext context) async {
+  var user = authUser();
+  if (user != null) {
+    try {
+      // update account
+      await dbInstance
+          .collection('bankAccounts')
+          .doc(account.accountId)
+          .update({
+        'status': 'Closed',
+      }).then((value) async {
+        // update bank account
+        if (context.mounted) {
+          showToast('Bank account closed successfully!', context,
+              status: Status.success);
+          Navigator.of(context).pop();
+        }
+      });
     } catch (error) {
       // error deleting user
       if (context.mounted) {

@@ -23,7 +23,6 @@ class ServiceCard extends StatelessWidget {
       child: InkWell(
         onTap: onPressed,
         child: Column(
-          // mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // icon
             icon,
