@@ -1,13 +1,38 @@
-name: Build & Deploy 💻 web app to 🔥 Firebase Hosting 🟠 Preview
+name: Test, Build & Deploy 💻 web app to 🔥 Firebase Hosting 🟠 Preview
 on:
   pull_request:
     branches:
       - develop
 
 jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📚 Checkout repo
+        uses: actions/checkout@v3
+
+      # decode firebase_option and write it to firebase_options.dart
+      - name: 🔐 Decode and write firebase_options.dart
+        env:
+          FIREBASE_OPTION: ${{ secrets.FIREBASE_OPTION }}
+        run: |
+          echo "$FIREBASE_OPTION" > lib/firebase_options.dart
+
+      - name: 🐦 Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+      - run: flutter pub get
+
+      # Run tests
+      - name: 🧪 Run Tests
+        run: flutter test
+
   build:
     name: Build
     runs-on: ubuntu-latest
+    needs: test
     steps:
       - name: 📚 Checkout repo
         uses: actions/checkout@v3
@@ -48,7 +73,7 @@ jobs:
           name: build
           path: build/web
 
-      - name: 🔥 Deploy to Firebase
+      - name: 🔥 Deploy to Firebase Preview 🟠
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}

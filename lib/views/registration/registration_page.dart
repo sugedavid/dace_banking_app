@@ -31,7 +31,7 @@ class ResgistrationPage extends StatelessWidget {
               children: [
                 Expanded(
                   child: BATextField(
-                    labelText: 'First Name',
+                    labelText: 'First name',
                     controller: firstNameController,
                     textInputType: TextInputType.name,
                   ),
@@ -41,7 +41,7 @@ class ResgistrationPage extends StatelessWidget {
                 ),
                 Expanded(
                   child: BATextField(
-                    labelText: 'Last Name',
+                    labelText: 'Last name',
                     controller: lastNameController,
                     textInputType: TextInputType.name,
                   ),
@@ -59,7 +59,7 @@ class ResgistrationPage extends StatelessWidget {
             //  phone
             BATextField(
               labelText: 'Phone',
-              hintText: 'Enter phone e.g +44123456789',
+              hintText: 'Enter Phone e.g +44123456789',
               controller: phoneController,
               textInputType: TextInputType.phone,
             ),
