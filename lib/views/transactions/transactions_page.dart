@@ -8,12 +8,28 @@ import 'package:flutter/material.dart';
 
 import '../../models/transaction.dart';
 
-class TransactionsPage extends StatelessWidget {
+class TransactionsPage extends StatefulWidget {
   const TransactionsPage(
       {super.key, required this.userData, required this.bankAccounts});
 
   final UserModel userData;
   final List<AccountModel> bankAccounts;
+
+  @override
+  State<TransactionsPage> createState() => _TransactionsPageState();
+}
+
+class _TransactionsPageState extends State<TransactionsPage> {
+  late Future<void> fetchDataFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchDataFuture = fetchTransactions(
+        userId: widget.userData.userId,
+        accountId: widget.bankAccounts[0].accountId,
+        context: context);
+  }
 
   Widget trailingIcon(type) {
     switch (type) {
@@ -59,6 +75,20 @@ class TransactionsPage extends StatelessWidget {
           ),
         );
 
+      case 'Recurring Payment':
+        return Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Colors.teal.withOpacity(0.1),
+          ),
+          padding: const EdgeInsets.all(8.0),
+          child: const Icon(
+            Icons.replay_outlined,
+            size: 20.0,
+            color: Colors.teal,
+          ),
+        );
+
       default:
         return Container(
           decoration: BoxDecoration(
@@ -78,10 +108,7 @@ class TransactionsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: fetchTransactions(
-            userId: userData.userId,
-            accountId: bankAccounts[0].accountId,
-            context: context),
+        future: fetchDataFuture,
         builder: (context, snapshot) {
           // loading state
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -97,7 +124,7 @@ class TransactionsPage extends StatelessWidget {
           else {
             List<TransactionModel> transactionData =
                 snapshot.data as List<TransactionModel>;
-            transactionData = transactionData.reversed.toList();
+
             return transactionData.isEmpty
                 ? const Center(
                     child: ListTile(
@@ -123,14 +150,17 @@ class TransactionsPage extends StatelessWidget {
                       separatorBuilder: (context, index) => const BADivider(),
                       itemCount: transactionData.length,
                       itemBuilder: (context, index) {
-                        final transaction =
-                            snapshot.data?[index] as TransactionModel;
+                        final transaction = transactionData[index];
                         final transactionType = transaction.transactionType;
                         final transactionAmount = transactionType ==
                                     'Deposit' ||
                                 (transaction.transactionType == 'Transfer' &&
                                     transaction.recipient?.userId ==
-                                        userData.userId)
+                                        widget.userData.userId) ||
+                                (transaction.transactionType ==
+                                        'Recurring Payment' &&
+                                    transaction.recipient?.userId ==
+                                        widget.userData.userId)
                             ? '+£${transaction.amount}'
                             : '-£${transaction.amount}';
 
@@ -156,19 +186,34 @@ class TransactionsPage extends StatelessWidget {
                                       (transaction.transactionType ==
                                               'Transfer' &&
                                           transaction.recipient?.userId ==
-                                              userData.userId)
+                                              widget.userData.userId) ||
+                                      (transaction.transactionType ==
+                                              'Recurring Payment' &&
+                                          transaction.recipient?.userId ==
+                                              widget.userData.userId)
                                   ? Colors.green
                                   : Colors.redAccent,
                             ),
                           ),
-                          onTap: () => Navigator.of(context).push(
+                          onTap: () => Navigator.of(context)
+                              .push(
                             MaterialPageRoute(
                               builder: (context) => TransactionDetailPage(
                                 transaction: transaction,
-                                user: userData,
+                                user: widget.userData,
                               ),
                             ),
-                          ),
+                          )
+                              .then((value) {
+                            // This function executes on pop back
+                            setState(() {
+                              fetchDataFuture = fetchTransactions(
+                                userId: widget.userData.userId,
+                                accountId: widget.bankAccounts[0].accountId,
+                                context: context,
+                              );
+                            });
+                          }),
                         );
                       },
                     ),

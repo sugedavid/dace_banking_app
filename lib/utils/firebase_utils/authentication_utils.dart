@@ -1,5 +1,4 @@
 import 'package:banking_app/models/user.dart';
-import 'package:banking_app/shared/ba_dialog.dart';
 import 'package:banking_app/shared/ba_toast_notification.dart';
 import 'package:banking_app/shared/main_scaffold.dart';
 import 'package:banking_app/utils/firebase_utils/user_utils.dart';
@@ -108,40 +107,6 @@ Future<void> logInUser(
     // error handling
     if (context.mounted) {
       showToast('Oops! Something went wrong: ${e.toString()}', context);
-    }
-  }
-}
-
-// handle phone enrollment
-Future<void> handlePhoneEnrollment(
-    UserModel userModel, BuildContext context) async {
-  User? currUser = authUser();
-  await currUser!.reload();
-  if (currUser.emailVerified) {
-    // proceed to main page
-    if (context.mounted) {
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(
-            builder: (context) => const MainScaffold(),
-          ),
-          (route) => false);
-    }
-  } else {
-    // proceed with phone number enrollment
-    if (context.mounted) {
-      BaDialog.showBaDialog(
-          context: context,
-          title: 'Two Factor Authentication',
-          content: PhoneEnrollmentPage(
-            userModel: userModel,
-          ));
-      // Navigator.of(context).pushAndRemoveUntil(
-      //     MaterialPageRoute(
-      //       builder: (context) => PhoneEnrollmentPage(
-      //         userModel: userModel,
-      //       ),
-      //     ),
-      //     (route) => false);
     }
   }
 }

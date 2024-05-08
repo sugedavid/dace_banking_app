@@ -129,6 +129,7 @@ Future<void> transferCash(
     required String recipientLastName,
     required String amount,
     required String newBalance,
+    required DateTime? recurring,
     required BuildContext context}) async {
   try {
     String createdAt = DateFormat('yyyy-MM-dd HH:mm').format(DateTime.now());
@@ -164,7 +165,7 @@ Future<void> transferCash(
             dbInstance.collection('transactions').doc(transactionId);
         var transaction = TransactionModel(
           transactionId: transactionRef.id,
-          transactionType: 'Transfer',
+          transactionType: recurring != null ? 'Recurring Payment' : 'Transfer',
           transactionStatus: 'Completed',
           transactionRef: generateTransactionReceipt('TRA'),
           userId: userId,
@@ -179,6 +180,7 @@ Future<void> transferCash(
             accountId: recipientAccount.accountId,
             email: recipientAccount.email,
           ),
+          recurring: recurring.toString(),
           createdAt: createdAt,
           amount: amount,
         );
@@ -195,6 +197,38 @@ Future<void> transferCash(
           );
         }
       });
+    });
+  } catch (error) {
+    // error
+    if (context.mounted) {
+      showToast('Error transfering cash: $error', context,
+          status: Status.error);
+    }
+  }
+}
+
+// cancel recurring transfer
+Future<void> cancelRecurringTransfer({
+  required TransactionModel transaction,
+  required BuildContext context,
+}) async {
+  try {
+    if (transaction.transactionId.isEmpty || transaction.recurring == null) {
+      return;
+    }
+
+    // update transaction
+    await dbInstance
+        .collection('transactions')
+        .doc(transaction.transactionId)
+        .update({
+      'transactionStatus': 'Cancelled',
+    }).then((value) async {
+      if (context.mounted) {
+        showToast('Recurring transfer cancelled', context,
+            status: Status.success);
+        Navigator.of(context).pop();
+      }
     });
   } catch (error) {
     // error
