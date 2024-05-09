@@ -273,7 +273,7 @@ class _TransferPageState extends State<TransferPage> {
 
                   if (formKey.currentState!.validate()) {
                     // check recurring dates
-                    if (date.isEmpty || time.isEmpty) {
+                    if (widget.isRecurring && (date.isEmpty || time.isEmpty)) {
                       showToast(
                           'Select date and time to set up recurring payments',
                           context,
